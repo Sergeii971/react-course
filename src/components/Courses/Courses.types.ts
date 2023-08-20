@@ -1,6 +1,6 @@
-import { CourseArray } from 'src/course.type';
+import { Course } from 'src/course.type';
 
 export interface CoursesProp {
-	courses: CourseArray;
+	courses: Course[];
 	searchLineValue: string;
 }

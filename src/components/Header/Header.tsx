@@ -10,11 +10,17 @@ const Header: React.FC = () => {
 				<Logo />
 				<Button
 					text='LOGIN'
-					onClick={() => console.log('You clicked on the orange circle!')}
+					onClick={() => {
+						handleOnClick;
+					}}
 				/>
 			</header>
 		</div>
 	);
 };
+
+function handleOnClick() {
+	alert('implement method');
+}
 
 export default Header;

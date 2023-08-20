@@ -4,7 +4,7 @@ import Button from 'src/common/Button/Button';
 import ReactDOM from 'react-dom/client';
 import Courses from '../../Courses';
 import { mockedCoursesList } from 'src/constants';
-import { CourseArray } from 'src/course.type';
+import { Course } from 'src/course.type';
 import Header from 'src/components/Header/Header';
 import { SearchBarProp } from './SearchBar.types';
 import './SearchBar.css';
@@ -28,7 +28,7 @@ function search(id: string) {
 	const searchLineValue: string = (
 		document.getElementById(id) as HTMLInputElement
 	).value;
-	const filteredList: CourseArray = mockedCoursesList.filter(
+	const filteredList: Course[] = mockedCoursesList.filter(
 		(course) =>
 			course.id.toUpperCase().includes(searchLineValue.toUpperCase()) ||
 			course.title.toUpperCase().includes(searchLineValue.toUpperCase())

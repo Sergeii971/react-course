@@ -11,21 +11,21 @@ import Header from 'src/components/Header/Header';
 
 const CourseCard: React.FC<CourseCardData> = (courseCardData) => {
 	return (
-		<div id={courseCardData.id} className='courseCard'>
-			<div id='titleId'>
+		<div key={courseCardData.key} id={courseCardData.id} className='courseCard'>
+			<div className='title'>
 				<h1>{courseCardData.title}</h1>
 			</div>
-			<div id='info'>
-				<div id='descriptionId'>
+			<div className='info'>
+				<div className='description'>
 					<text>{courseCardData.description}</text>
 				</div>
 				<br></br>
-				<div id='courseData'>
+				<div className='courseData'>
 					<text id='durationId'>
 						<b>Duration: </b> {getCourseDuration(courseCardData.duration)}
 					</text>
 					<br />
-					<text id='authorsId'>
+					<text className='authors'>
 						<b>Authors: </b> {getAuthorNames(courseCardData)}
 					</text>
 					<br />

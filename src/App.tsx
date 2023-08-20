@@ -4,13 +4,13 @@ import Courses from './components/Courses/Courses';
 import './App.css';
 import { mockedCoursesList } from './constants';
 
-function App() {
+const App: React.FC = () => {
 	return (
 		<div id='App' className='App'>
 			<Header />
 			<Courses courses={mockedCoursesList} searchLineValue={''} />
 		</div>
 	);
-}
+};
 
 export default App;

@@ -6,5 +6,3 @@ export interface Course {
 	duration: number;
 	authors: string[];
 }
-
-export type CourseArray = Course[];

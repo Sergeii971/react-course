@@ -1,6 +1,6 @@
 import React from 'react';
 import CourseCard from './components/CourseCard/CourseCard';
-import { buildAuthor } from './components/CourseCard/Author.types';
+import { Author } from './components/CourseCard/Author.types';
 import EmptyCourseList from './components/EmptyCourseList/EmptyCourseList';
 import './Courses.css';
 import Button from 'src/common/Button/Button';
@@ -12,6 +12,7 @@ const Courses: React.FC<CoursesProp> = (coursesProp) => {
 		const courseList = coursesProp.courses.map((course) => (
 			<CourseCard
 				id={course.id}
+				key={course.id}
 				title={course.title}
 				description={course.description}
 				creationDate={course.creationDate}
@@ -19,7 +20,6 @@ const Courses: React.FC<CoursesProp> = (coursesProp) => {
 				authors={course.authors.map((author) => buildAuthor(author, ''))}
 			/>
 		));
-		console.log(coursesProp.searchLineValue);
 		return (
 			<div id='coursesComponentId' className='courses'>
 				<div className='searchBarWithAddButton'>
@@ -41,5 +41,9 @@ const Courses: React.FC<CoursesProp> = (coursesProp) => {
 		);
 	}
 };
+
+function buildAuthor(id: string, name: string): Author {
+	return { id: id, name: name };
+}
 
 export default Courses;

@@ -8,36 +8,32 @@
     flex-grow: 3
     }
 
-    div#courseInfoDescriptionId {
-        margin : 50px;
-    }
 
-    div#courseInfoData {
-        margin : 50px;
-    }
+.courseInfoData {
+    margin : 50px;
+}
 
 
-    text#courseId  {
-        white-space: nowrap; 
-    }
+.courseId {
+    white-space: nowrap; 
+}
 
-    div#courseInfoDescriptionId {
+.courseInfoDescription {
     display: inline-block;
     box-sizing:border-box;
     width: 800px;
     text-align: left;
-    margin-right: 20px;
-    margin-left: 20px;
+    margin: 50px 20px 50px 40px;
 }
 
-    div#backButton button {
+.backButton button {
       float: right;
       vertical-align: bottom;
       background: cadetblue;
       color: black;
       border: 1px solid black;
       border-radius: 5px;
-      width: -moz-fit-content;
+      width: fit-content;
       width: 150px;
       height: 40px;
       margin-top: 20px;
@@ -45,25 +41,21 @@
 
 
 
-    div#courseInfo {
-        display: flex;
-        justify-content: space-between;
-        box-sizing:border-box;
-        text-align: left;
-         border: 1px solid black;
-        margin-top: 1px;
-        background: white;
+.courseMain {
+    display: flex;
+    justify-content: space-between;
+    box-sizing:border-box;
+    text-align: left;
+    border: 1px solid black;
+    margin-top: 1px;
+    background: white;
     }
 
-    text#courseInfoAuthorsId {
-        display: inline-block;
-        max-width: 420px;
-        white-space: nowrap; 
-        overflow: hidden;
-        text-overflow: ellipsis; 
+.courseInfoAuthors {
+    display: inline-block;
+    max-width: 420px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
     }
 
-    div#courseInfoData div {
-        display: inline-block;
-        justify-content: space-between;
-    }
