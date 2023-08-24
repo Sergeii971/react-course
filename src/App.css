@@ -4,3 +4,7 @@
     height: 100vh;
     background-color: #F8F8FF;
 }
+
+.App .header button {
+    display: block;
+}

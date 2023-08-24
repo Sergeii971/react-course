@@ -1,18 +1,22 @@
 import React from 'react';
-import Button from 'src/common/Button/Button';
-import './CourseInfo.css';
-import getCourseDuration from 'src/helpers/getCourseDuration';
-import getAuthorNames from 'src/helpers/GetAuthorNames';
-import formatCreationDate from 'src/helpers/formatCreationDate';
-import { CourseCardData } from '../Courses/components/CourseCard/CourseCard.types';
-import ReactDOM from 'react-dom/client';
-import Courses from '../Courses/Courses';
-import Header from '../Header/Header';
-import { mockedCoursesList } from 'src/constants';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const CourseInfo: React.FC<CourseCardData> = (
-	courseCardData: CourseCardData
-) => {
+import { getCourseInfoBy } from 'src/service/APIservice';
+import { CourseCardData } from '../Courses/components/CourseCard';
+import { Button } from 'src/common/Button';
+import {
+	formatCreationDate,
+	getAuthorNames,
+	getCourseDuration,
+} from 'src/util/CourseUtil';
+import { RouterPath } from 'src/util/RouterPath';
+
+import './CourseInfo.css';
+
+export const CourseInfo: React.FC = () => {
+	const navigate = useNavigate();
+	const { courseId } = useParams();
+	const courseCardData: CourseCardData = getCourseInfoBy(courseId);
 	return (
 		<div id='courseInfoComponent' className='courseInfo'>
 			<div id='courseInfoTitleId'>
@@ -54,19 +58,12 @@ const CourseInfo: React.FC<CourseCardData> = (
 				</div>
 			</div>
 			<div className='backButton'>
-				<Button text='Back' onClick={() => showCourses()} />
+				<Button
+					text='Back'
+					onClick={() => navigate(RouterPath.GET_COURSES)}
+					id={'backButtonId'}
+				/>
 			</div>
 		</div>
 	);
 };
-
-function showCourses() {
-	ReactDOM.createRoot(document.getElementById('App')).render(
-		<React.StrictMode>
-			<Header />
-			<Courses courses={mockedCoursesList} searchLineValue={''} />
-		</React.StrictMode>
-	);
-}
-
-export default CourseInfo;
