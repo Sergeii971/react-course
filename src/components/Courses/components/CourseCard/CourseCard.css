@@ -1,0 +1,61 @@
+.courseCard {
+    border: 1px solid black;
+    margin-top: 1px;
+    background: white;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    }
+
+.title {
+    margin-left: 20px;
+}
+
+.description {
+    display: inline-block;
+    box-sizing:border-box;
+    width: 800px;
+    text-align: left;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+  
+.courseCard button {
+    vertical-align: bottom;
+    background: cadetblue;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: -moz-fit-content;
+    width: 150px;
+    height: 35px;
+    margin: 10px 30px 10px 0px;
+}
+
+
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    box-sizing:border-box;
+    text-align: left;
+}
+
+.authors {
+    display: inline-block;
+    width: 250px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    margin-top: 6px;
+}
+
+.courseData div {
+    display: inline-block;
+    justify-content: space-between;
+}
+
+.courseData text {
+    margin-bottom: 6px;
+}

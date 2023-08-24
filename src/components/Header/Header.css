@@ -1,0 +1,23 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  border: 1px solid black;
+  }
+
+  .header img {
+    border: 1px solid black;
+    margin: 10px 0px 10px 20px;
+  }
+
+  .header button {
+    vertical-align: bottom;
+    background: cadetblue;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: -moz-fit-content;
+    width: 84px;
+    height: 32px;
+    margin: 10px 30px 10px 0px;
+  }

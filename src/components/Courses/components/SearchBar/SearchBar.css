@@ -1,0 +1,24 @@
+.searchBar {
+    display: flex;
+    justify-content: space-between;
+    box-sizing:border-box;
+    text-align: left;
+}
+
+.searchBar input {
+    width: 230px;
+    height: 29px;
+}
+
+.searchBar button {
+    vertical-align: bottom;
+    background: cadetblue;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: -moz-fit-content;
+    width: 120px;
+    height: 35px;
+    margin-left: 30px;
+  }
+  

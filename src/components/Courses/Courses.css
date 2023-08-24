@@ -1,0 +1,32 @@
+.courses {
+    display: block;
+    position: absolute;
+    background: #F8F8FF;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-grow: 3;
+}
+
+  .addButton button {
+    vertical-align: bottom; 
+    background: cadetblue;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: -moz-fit-content;
+    width: 150px;
+    height: 40px;
+    margin-bottom: 20px;
+  } 
+
+  .searchBar {
+    float: left;
+  }
+
+  .searchBarWithAddButton {
+     display: flex;
+    justify-content: space-between;
+    box-sizing:border-box;
+    text-align: left;
+  }

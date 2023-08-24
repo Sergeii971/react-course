@@ -1,0 +1,61 @@
+.courseInfo {
+    display: block;
+    position: absolute;
+    max-width: 1000px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-grow: 3
+    }
+
+
+.courseInfoData {
+    margin : 50px;
+}
+
+
+.courseId {
+    white-space: nowrap; 
+}
+
+.courseInfoDescription {
+    display: inline-block;
+    box-sizing:border-box;
+    width: 800px;
+    text-align: left;
+    margin: 50px 20px 50px 40px;
+}
+
+.backButton button {
+      float: right;
+      vertical-align: bottom;
+      background: cadetblue;
+      color: black;
+      border: 1px solid black;
+      border-radius: 5px;
+      width: fit-content;
+      width: 150px;
+      height: 40px;
+      margin-top: 20px;
+    }
+
+
+
+.courseMain {
+    display: flex;
+    justify-content: space-between;
+    box-sizing:border-box;
+    text-align: left;
+    border: 1px solid black;
+    margin-top: 1px;
+    background: white;
+    }
+
+.courseInfoAuthors {
+    display: inline-block;
+    max-width: 420px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    }
+
