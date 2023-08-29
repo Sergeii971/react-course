@@ -1,0 +1,5 @@
+export enum CourseActionType {
+	FILL_COURSE_LIST = 'FILL_COURSE_LIST',
+	DELETE_COURSE = 'DELETE_COURSE',
+	ADD_COURSE = 'ADD_COURSE',
+}

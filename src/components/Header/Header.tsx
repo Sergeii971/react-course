@@ -1,28 +1,29 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Logo } from './components/Logo';
 import { Button } from 'src/common/Button';
-import { TOKEN_KEY_NAME, USER_NAME_KEY_NAME } from 'src/util/CommonConstant';
 import { RouterPath } from 'src/util/RouterPath';
 import { logout } from 'src/util/LoginUtil';
+import { RootState } from 'src/store';
+import { LogoutAction } from 'src/store/user/action';
 
 import './Header.css';
 
+const LOGOUT_BUTTON_TEXT = 'LOGOUT';
+
 export const Header: React.FC = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 	const location = useLocation();
-	const token = localStorage.getItem(TOKEN_KEY_NAME);
-	const userName = localStorage.getItem(USER_NAME_KEY_NAME);
-	const buttonText = token === null ? 'LOGIN' : 'LOGOUT';
+	const userData = useSelector((state: RootState) => state.auth);
+	const userName = userData.name;
 
 	const buttonAction = () => {
-		if (token !== null) {
-			logout();
-			navigate(RouterPath.GET_COURSES);
-		} else {
-			navigate(RouterPath.LOGIN);
-		}
+		logout();
+		dispatch(LogoutAction());
+		navigate(RouterPath.LOGIN);
 	};
 	if (
 		location.pathname === RouterPath.LOGIN ||
@@ -37,18 +38,14 @@ export const Header: React.FC = () => {
 		);
 	}
 	return (
-		<div className='userNameWithButton'>
+		<div>
 			<header className='header'>
 				<Logo />
-				<div className='userNameWithButtton'>
+				<div className='userNameWithButton'>
 					<div className='userName'>
 						<b>{userName}</b>
 					</div>
-					<Button
-						id='headerLoginButtonId'
-						text={buttonText}
-						onClick={buttonAction}
-					/>
+					<Button text={LOGOUT_BUTTON_TEXT} onClick={buttonAction} />
 				</div>
 			</header>
 		</div>

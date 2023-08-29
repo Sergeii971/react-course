@@ -12,6 +12,7 @@
 
   .header button {
     vertical-align: bottom;
+    text-align: center;
     background: cadetblue;
     color: black;
     border: 1px solid black;
@@ -26,6 +27,6 @@
     margin: 16px 30px 10px 0px;
   }
 
-  .header .userNameWithButtton {
+  .header .userNameWithButton {
     display: flex;
   }

@@ -1,7 +1,9 @@
+import { useSelector } from 'react-redux';
+
 import { Author } from 'src/components/Courses/components/CourseCard/Author.types';
 import { CourseCardData } from 'src/components/Courses/components/CourseCard';
-import { mockedAuthorsList } from 'src/constants';
 import { Course } from 'src/course.type';
+import { RootState } from 'src/store';
 
 export const buildAuthor = (id: string, name: string): Author => {
 	return { id: id, name: name };
@@ -24,13 +26,16 @@ export const formatCreationDate = (creationDate: string) => {
 		.replaceAll('/', '.');
 };
 
-export const getAuthorNames = (courseCardData: CourseCardData) => {
-	return mockedAuthorsList
+export const getAuthorNames = (authors: Author[]) => {
+	const AuthorNames = useSelector(
+		(state: RootState) => state.authorReducer.authors
+	)
 		.filter((author) =>
-			courseCardData.authors.map((author1) => author1.id).includes(author.id)
+			authors.map((author1) => author1.id).includes(author.id)
 		)
 		.map((author) => author.name)
 		.join();
+	return AuthorNames;
 };
 
 export const getCourseDuration = (duration: number) => {

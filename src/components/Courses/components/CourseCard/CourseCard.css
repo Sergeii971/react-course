@@ -20,19 +20,37 @@
     margin-right: 20px;
     margin-left: 20px;
 }
-  
-.courseCard button {
+
+.courseCard .actionButtons {
+    display: flex;
+    margin: 10px 0px 10px 0px;
+}
+
+.courseCard .actionButtons button {
     vertical-align: bottom;
     background: cadetblue;
     color: black;
     border: 1px solid black;
     border-radius: 5px;
-    width: -moz-fit-content;
-    width: 150px;
-    height: 35px;
-    margin: 10px 30px 10px 0px;
+    width: fit-content;
+    margin: 10px 10px 20px 0px;
 }
 
+.courseCard .actionButtons .showCourseInfoButton button {
+    width: 150px;
+    height: 35px;
+}
+
+.courseCard .actionButtons .deleteButton button {
+    width: 70px;
+    height: 35px;
+}
+
+.courseCard .actionButtons .editButton button {
+    width: 70px;
+    height: 35px;
+    margin-right: 30px;
+}
 
 
 .info {

@@ -35,7 +35,6 @@
 }
 
 .addCourseForm {
-   
     box-sizing:border-box;
     text-align: left;
     border: 1px solid black;
@@ -98,7 +97,6 @@
 }
 
 .createCourseButton button {
-    margin: 0 auto;
     display: block;
     background-color: cadetblue;
     color: black;
