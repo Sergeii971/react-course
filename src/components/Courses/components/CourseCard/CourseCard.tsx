@@ -1,17 +1,25 @@
 import React from 'react';
-import { CourseCardData } from './CourseCard.types';
-import Button from 'src/common/Button/Button';
-import './CourseCard.css';
-import getCourseDuration from 'src/helpers/getCourseDuration';
-import formatCreationDate from 'src/helpers/formatCreationDate';
-import getAuthorNames from 'src/helpers/GetAuthorNames';
-import CourseInfo from 'src/components/CourseInfo/CourseInfo';
-import ReactDOM from 'react-dom/client';
-import Header from 'src/components/Header/Header';
+import { useNavigate } from 'react-router-dom';
 
-const CourseCard: React.FC<CourseCardData> = (courseCardData) => {
+import { CourseCardData } from './CourseCard.types';
+import { Button } from 'src/common/Button';
+import { RouterPath } from 'src/util/RouterPath';
+import { COURSE_ID_REQUEST_PARAM } from 'src/util/CommonConstant';
+import {
+	formatCreationDate,
+	getAuthorNames,
+	getCourseDuration,
+} from 'src/util/CourseUtil';
+
+import './CourseCard.css';
+
+export const CourseCard: React.FC<CourseCardData> = (courseCardData) => {
+	const navigate = useNavigate();
+	const showCourseInfo = (id: string) => {
+		navigate(RouterPath.GET_COURSE_BY_ID.replace(COURSE_ID_REQUEST_PARAM, id));
+	};
 	return (
-		<div key={courseCardData.key} id={courseCardData.id} className='courseCard'>
+		<div id={courseCardData.id} className='courseCard' key={courseCardData.id}>
 			<div className='title'>
 				<h1>{courseCardData.title}</h1>
 			</div>
@@ -34,22 +42,12 @@ const CourseCard: React.FC<CourseCardData> = (courseCardData) => {
 					</text>
 					<br />
 					<Button
+						id='showCourseInfoButtonId'
 						text='SHOW COURSE'
-						onClick={() => showCourseInfo(courseCardData)}
+						onClick={() => showCourseInfo(courseCardData.id)}
 					/>
 				</div>
 			</div>
 		</div>
 	);
 };
-
-function showCourseInfo(courseCardData: CourseCardData) {
-	ReactDOM.createRoot(document.getElementById('App')).render(
-		<div>
-			<Header />
-			<CourseInfo {...courseCardData} />
-		</div>
-	);
-}
-
-export default CourseCard;

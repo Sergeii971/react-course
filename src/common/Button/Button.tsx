@@ -1,10 +1,11 @@
 import React from 'react';
+
 import { ButtonProps } from './Button.types';
 
-const Button: React.FC<ButtonProps> = (props) => (
+export const Button: React.FC<ButtonProps> = (props) => (
 	<div>
-		<button onClick={props.onClick}>{props.text}</button>
+		<button id={props.id} onClick={props.onClick}>
+			{props.text}
+		</button>
 	</div>
 );
-
-export default Button;

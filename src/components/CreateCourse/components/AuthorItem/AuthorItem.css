@@ -1,0 +1,14 @@
+.addAuthorButton button {
+    background-color: white;
+    border: 0px;
+}
+
+.removeAuthorButton button {
+    background-color: white;
+    border: 0px;
+}
+
+.courseAuthorItem {
+    display: flex;
+    text-align: center;
+}

@@ -2,7 +2,6 @@ import { Author } from './Author.types';
 
 export interface CourseCardData {
 	id: string;
-	key: string;
 	title: string;
 	description: string;
 	creationDate: string;
