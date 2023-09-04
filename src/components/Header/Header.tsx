@@ -1,13 +1,12 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { Logo } from './components/Logo';
 import { Button } from 'src/common/Button';
 import { RouterPath } from 'src/util/RouterPath';
-import { logout } from 'src/util/LoginUtil';
-import { RootState } from 'src/store';
-import { LogoutAction } from 'src/store/user/action';
+import { useAppDispatch, useAppSelector } from 'src/store/hook';
+import { selectUser } from 'src/store/selector/UserSelector';
+import { logout } from 'src/store/user/thunk';
 
 import './Header.css';
 
@@ -15,14 +14,13 @@ const LOGOUT_BUTTON_TEXT = 'LOGOUT';
 
 export const Header: React.FC = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const location = useLocation();
-	const userData = useSelector((state: RootState) => state.auth);
+	const userData = selectUser(useAppSelector((state) => state));
 	const userName = userData.name;
 
 	const buttonAction = () => {
-		logout();
-		dispatch(LogoutAction());
+		dispatch(logout());
 		navigate(RouterPath.LOGIN);
 	};
 	if (

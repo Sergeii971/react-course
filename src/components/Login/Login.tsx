@@ -1,30 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 import { Input } from 'src/common/Input';
 import { Button } from 'src/common/Button';
 import { LoginUser } from './LoginUser.types';
-import {
-	callLoginAPI,
-	getAllAuthors,
-	getAllCourses,
-} from 'src/service/APIservice';
-import { FillAuthorListAction } from 'src/store/author/action';
-import { FillCourseListAction } from 'src/store/course/action';
-import {
-	INPUT_EMAIL_LABEL_TEXT,
-	INPUT_EMAIL_NAME,
-	INPUT_EMAIL_PLACEHOLDER_TEXT,
-	INPUT_EMAIL_TYPE,
-	INPUT_PASSWORD_LABEL_TEXT,
-	INPUT_PASSWORD_NAME,
-	INPUT_PASSWORD_PLACEHOLDER_TEXT,
-	INPUT_PASSWORD_TYPE,
-	TOKEN_KEY_NAME,
-} from 'src/util/CommonConstant';
+import { callLoginAPI } from 'src/service/APIservice';
+import { CommonConstant } from 'src/util/CommonConstant';
 import { RouterPath } from 'src/util/RouterPath';
-import { LoginAction } from 'src/store/user/action';
+import { useAppDispatch } from 'src/store/hook';
+import { LOGIN } from 'src/store/user/reducer';
 
 import './Login.css';
 
@@ -35,7 +19,7 @@ const LOGIN_BUTTON_TEXT = 'LOGIN';
 
 export const Login: React.FC = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
@@ -59,17 +43,8 @@ export const Login: React.FC = () => {
 		if (!user.successful) {
 			alert(user.result);
 		} else {
-			localStorage.setItem(TOKEN_KEY_NAME, user.result);
-			dispatch(
-				LoginAction(user.successful, user.name, user.email, user.result)
-			);
-
-			getAllAuthors().then((authors) => {
-				dispatch(FillAuthorListAction(authors));
-			});
-			getAllCourses().then((courses) => {
-				dispatch(FillCourseListAction(courses));
-			});
+			localStorage.setItem(CommonConstant.TOKEN_KEY_NAME, user.result);
+			dispatch(LOGIN(user));
 		}
 		navigate(RouterPath.GET_COURSES);
 	};
@@ -83,23 +58,23 @@ export const Login: React.FC = () => {
 				<form className='loginForm' onSubmit={login}>
 					<div className='email'>
 						<Input
-							type={INPUT_EMAIL_TYPE}
-							name={INPUT_EMAIL_NAME}
+							type={CommonConstant.INPUT_EMAIL_TYPE}
+							name={CommonConstant.INPUT_EMAIL_NAME}
 							value={email}
 							required={true}
-							labelText={INPUT_EMAIL_LABEL_TEXT}
-							placeholderText={INPUT_EMAIL_PLACEHOLDER_TEXT}
+							labelText={CommonConstant.INPUT_EMAIL_LABEL_TEXT}
+							placeholderText={CommonConstant.INPUT_EMAIL_PLACEHOLDER_TEXT}
 							onChange={emailOnChange}
 						/>
 					</div>
 					<div className='password'>
 						<Input
-							type={INPUT_PASSWORD_TYPE}
-							name={INPUT_PASSWORD_NAME}
+							type={CommonConstant.INPUT_PASSWORD_TYPE}
+							name={CommonConstant.INPUT_PASSWORD_NAME}
 							value={password}
 							required={true}
-							labelText={INPUT_PASSWORD_LABEL_TEXT}
-							placeholderText={INPUT_PASSWORD_PLACEHOLDER_TEXT}
+							labelText={CommonConstant.INPUT_PASSWORD_LABEL_TEXT}
+							placeholderText={CommonConstant.INPUT_PASSWORD_PLACEHOLDER_TEXT}
 							onChange={passwordOnChange}
 						/>
 					</div>

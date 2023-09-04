@@ -1,38 +1,27 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { getCourseInfoBy } from 'src/service/APIservice';
 import { Button } from 'src/common/Button';
-import {
-	formatCreationDate,
-	getAuthorNames,
-	getCourseDuration,
-} from 'src/util/CourseUtil';
+import { CourseUtil } from 'src/util/CourseUtil';
 import { RouterPath } from 'src/util/RouterPath';
-import {
-	AUTHORS_TITLE_VALUE,
-	BACK_BUTTON_TEXT_VALUE,
-	CREATED_DATE_TITLE_VALUE,
-	DESCRIPTION_TITLE_VALUE,
-	DURATION_TITLE_VALUE,
-	ID_TITLE_VALUE,
-	TOKEN_KEY_NAME,
-} from 'src/util/CommonConstant';
+import { CommonConstant } from 'src/util/CommonConstant';
+import { useAppSelector } from 'src/store/hook';
+import { selectCourseById } from 'src/store/selector/CourseSelector';
 
 import './CourseInfo.css';
 
 export const CourseInfo: React.FC = () => {
 	const navigate = useNavigate();
 
-	if (
-		localStorage.getItem(TOKEN_KEY_NAME) === '' ||
-		localStorage.getItem(TOKEN_KEY_NAME) === null
-	) {
-		navigate(RouterPath.LOGIN);
-	}
+	const authors = useAppSelector((state) => state.authorReducer.authors);
 
 	const { courseId } = useParams();
-	const courseCardData = getCourseInfoBy(courseId);
+	const course = selectCourseById(
+		useAppSelector((state) => state),
+		courseId
+	);
+
+	const courseCardData = CourseUtil.buildCourseCardData(course);
 
 	return (
 		<div className='courseInfo'>
@@ -41,7 +30,7 @@ export const CourseInfo: React.FC = () => {
 			</div>
 			<div className='courseMain'>
 				<div className='courseInfoDescription'>
-					<b>{DESCRIPTION_TITLE_VALUE}</b>
+					<b>{CommonConstant.DESCRIPTION_TITLE_VALUE}</b>
 					<br />
 					<br />
 					<text>{courseCardData.description}</text>
@@ -51,32 +40,32 @@ export const CourseInfo: React.FC = () => {
 					<br />
 					<br />
 					<text className='courseId'>
-						<b>{ID_TITLE_VALUE}</b>
+						<b>{CommonConstant.ID_TITLE_VALUE}</b>
 						{courseCardData.id}
 					</text>
 					<br />
 					<br />
 					<text>
-						<b>{DURATION_TITLE_VALUE}</b>
-						{getCourseDuration(courseCardData.duration)}
+						<b>{CommonConstant.DURATION_TITLE_VALUE}</b>
+						{CourseUtil.getCourseDuration(courseCardData.duration)}
 					</text>
 					<br />
 					<br />
 					<text className='courseInfoAuthors'>
-						<b>{AUTHORS_TITLE_VALUE}</b>
-						{getAuthorNames(courseCardData.authors)}
+						<b>{CommonConstant.AUTHORS_TITLE_VALUE}</b>
+						{CourseUtil.getAuthorNames(courseCardData.authors, authors)}
 					</text>
 					<br />
 					<br />
 					<text>
-						<b>{CREATED_DATE_TITLE_VALUE}</b>
-						{formatCreationDate(courseCardData.creationDate)}
+						<b>{CommonConstant.CREATED_DATE_TITLE_VALUE}</b>
+						{CourseUtil.formatCreationDate(courseCardData.creationDate)}
 					</text>
 				</div>
 			</div>
 			<div className='backButton'>
 				<Button
-					text={BACK_BUTTON_TEXT_VALUE}
+					text={CommonConstant.BACK_BUTTON_TEXT_VALUE}
 					onClick={() => navigate(RouterPath.GET_COURSES)}
 				/>
 			</div>

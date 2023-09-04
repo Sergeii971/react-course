@@ -1,31 +1,36 @@
-import { produce } from 'immer';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { CourseActionType } from './type';
-import { CourseActionDataType } from './action';
 import { Course } from 'src/course.type';
 
 const INITIAL_STATE = {
 	courses: [] as Course[],
 };
-export const courseReducer = (
-	state = INITIAL_STATE,
-	action: CourseActionDataType
-) => {
-	return produce(state, (draft) => {
-		switch (action.type) {
-			case CourseActionType.FILL_COURSE_LIST:
-				draft.courses = action.payload;
-				break;
-			case CourseActionType.DELETE_COURSE:
-				draft.courses = state.courses.filter(
-					(course) => course.id !== (action.payload as string)
-				);
-				break;
-			case CourseActionType.ADD_COURSE:
-				draft.courses = state.courses.map((course) => course);
-				draft.courses.push(action.payload);
-				break;
-			default:
-		}
-	});
-};
+
+export const courseSlice = createSlice({
+	name: 'courseReducer',
+	initialState: INITIAL_STATE,
+	reducers: {
+		FILL_COURSE_LIST: (state, action: PayloadAction<Course[]>) => {
+			state.courses = action.payload;
+		},
+		DELETE_COURSE: (state, action: PayloadAction<string>) => {
+			state.courses = state.courses.filter(
+				(course) => course.id !== (action.payload as string)
+			);
+		},
+		ADD_COURSE: (state, action: PayloadAction<Course>) => {
+			state.courses = state.courses.map((course) => course);
+			state.courses.push(action.payload);
+		},
+		UPDATE_COURSE: (state, action: PayloadAction<Course>) => {
+			state.courses = state.courses.filter(
+				(course) => course.id !== action.payload.id
+			);
+			state.courses.push(action.payload);
+		},
+	},
+});
+
+export const { FILL_COURSE_LIST, DELETE_COURSE, ADD_COURSE, UPDATE_COURSE } =
+	courseSlice.actions;
+export default courseSlice.reducer;

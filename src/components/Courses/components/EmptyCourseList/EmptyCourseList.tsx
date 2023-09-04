@@ -2,10 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Button } from 'src/common/Button';
-import {
-	PERMISSION_ERROR_TEXT_MESSAGE,
-	TOKEN_KEY_NAME,
-} from 'src/util/CommonConstant';
 import { RouterPath } from 'src/util/RouterPath';
 
 import './EmptyCourseList.css';
@@ -19,15 +15,7 @@ export const EmptyCourseList: React.FC = () => {
 	const navigate = useNavigate();
 
 	const addCourseOnClick = () => {
-		//add role check in module 4
-		if (
-			localStorage.getItem(TOKEN_KEY_NAME) === null ||
-			localStorage.getItem(TOKEN_KEY_NAME) === ''
-		) {
-			alert(PERMISSION_ERROR_TEXT_MESSAGE);
-		} else {
-			navigate(RouterPath.ADD_NEW_COURSE);
-		}
+		navigate(RouterPath.ADD_NEW_COURSE);
 	};
 
 	return (

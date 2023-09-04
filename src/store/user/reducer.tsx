@@ -1,32 +1,41 @@
-import { produce } from 'immer';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { UserActionType } from './type';
-import { UserActionDataType } from './action';
+import { UserType } from './User.types';
+import { UserDto } from 'src/service/dto/UserDto.types';
+import { CurrentUserDto } from 'src/service/dto/CurrentUserDto';
 
-const INITIAL_STATE = {
+const INITIAL_STATE: UserType = {
 	isAuth: false,
 	name: '',
 	email: '',
 	token: '',
+	role: '',
 };
 
-export const auth = (state = INITIAL_STATE, action: UserActionDataType) => {
-	return produce(state, (draft) => {
-		switch (action.type) {
-			case UserActionType.LOGIN:
-				draft.isAuth = true;
-				draft.name = action.payload.name;
-				draft.email = action.payload.email;
-				draft.token = action.payload.token;
+export const userSlice = createSlice({
+	name: 'authReducer',
+	initialState: INITIAL_STATE,
+	reducers: {
+		LOGIN: (state, action: PayloadAction<UserDto>) => {
+			state.isAuth = true;
+			state.name = action.payload.name;
+			state.email = action.payload.email;
+			state.token = action.payload.result;
+		},
+		UPDATE_USER_DATA: (state, action: PayloadAction<CurrentUserDto>) => {
+			state.name = action.payload.name;
+			state.email = action.payload.email;
+			state.role = action.payload.role;
+		},
+		LOGOUT: (state) => {
+			state.isAuth = false;
+			state.name = '';
+			state.email = '';
+			state.token = '';
+			state.role = '';
+		},
+	},
+});
 
-				break;
-			case UserActionType.LOGOUT:
-				draft.isAuth = false;
-				draft.name = '';
-				draft.email = '';
-				draft.token = '';
-				break;
-			default:
-		}
-	});
-};
+export const { LOGIN, LOGOUT, UPDATE_USER_DATA } = userSlice.actions;
+export default userSlice.reducer;

@@ -6,20 +6,7 @@ import { Input } from 'src/common/Input';
 import { NewUser } from './NewUser.types';
 import { callRegisterAPI } from 'src/service/APIservice';
 import { RouterPath } from 'src/util/RouterPath';
-import {
-	INPUT_EMAIL_LABEL_TEXT,
-	INPUT_EMAIL_NAME,
-	INPUT_EMAIL_PLACEHOLDER_TEXT,
-	INPUT_EMAIL_TYPE,
-	INPUT_NAME_LABEL_TEXT,
-	INPUT_NAME_NAME,
-	INPUT_NAME_PLACEHOLDER_TEXT,
-	INPUT_NAME_TYPE,
-	INPUT_PASSWORD_LABEL_TEXT,
-	INPUT_PASSWORD_NAME,
-	INPUT_PASSWORD_PLACEHOLDER_TEXT,
-	INPUT_PASSWORD_TYPE,
-} from 'src/util/CommonConstant';
+import { CommonConstant } from 'src/util/CommonConstant';
 
 import './Registration.css';
 
@@ -70,34 +57,34 @@ export const Registration: React.FC = () => {
 				<form className='registrationForm' onSubmit={signUp}>
 					<div className='name'>
 						<Input
-							type={INPUT_NAME_TYPE}
-							name={INPUT_NAME_NAME}
+							type={CommonConstant.INPUT_NAME_TYPE}
+							name={CommonConstant.INPUT_NAME_NAME}
 							value={name}
 							required={true}
-							labelText={INPUT_NAME_LABEL_TEXT}
-							placeholderText={INPUT_NAME_PLACEHOLDER_TEXT}
+							labelText={CommonConstant.INPUT_NAME_LABEL_TEXT}
+							placeholderText={CommonConstant.INPUT_NAME_PLACEHOLDER_TEXT}
 							onChange={nameOnChange}
 						/>
 					</div>
 					<div className='email'>
 						<Input
-							type={INPUT_EMAIL_TYPE}
-							name={INPUT_EMAIL_NAME}
+							type={CommonConstant.INPUT_EMAIL_TYPE}
+							name={CommonConstant.INPUT_EMAIL_NAME}
 							value={email}
 							required={true}
-							labelText={INPUT_EMAIL_LABEL_TEXT}
-							placeholderText={INPUT_EMAIL_PLACEHOLDER_TEXT}
+							labelText={CommonConstant.INPUT_EMAIL_LABEL_TEXT}
+							placeholderText={CommonConstant.INPUT_EMAIL_PLACEHOLDER_TEXT}
 							onChange={emailOnChange}
 						/>
 					</div>
 					<div className='password'>
 						<Input
-							type={INPUT_PASSWORD_TYPE}
-							name={INPUT_PASSWORD_NAME}
+							type={CommonConstant.INPUT_PASSWORD_TYPE}
+							name={CommonConstant.INPUT_PASSWORD_NAME}
 							value={password}
 							required={true}
-							labelText={INPUT_PASSWORD_LABEL_TEXT}
-							placeholderText={INPUT_PASSWORD_PLACEHOLDER_TEXT}
+							labelText={CommonConstant.INPUT_PASSWORD_LABEL_TEXT}
+							placeholderText={CommonConstant.INPUT_PASSWORD_PLACEHOLDER_TEXT}
 							onChange={passwordOnChange}
 						/>
 					</div>
