@@ -6,8 +6,26 @@ import { Input } from 'src/common/Input';
 import { NewUser } from './NewUser.types';
 import { callRegisterAPI } from 'src/service/APIservice';
 import { RouterPath } from 'src/util/RouterPath';
+import {
+	INPUT_EMAIL_LABEL_TEXT,
+	INPUT_EMAIL_NAME,
+	INPUT_EMAIL_PLACEHOLDER_TEXT,
+	INPUT_EMAIL_TYPE,
+	INPUT_NAME_LABEL_TEXT,
+	INPUT_NAME_NAME,
+	INPUT_NAME_PLACEHOLDER_TEXT,
+	INPUT_NAME_TYPE,
+	INPUT_PASSWORD_LABEL_TEXT,
+	INPUT_PASSWORD_NAME,
+	INPUT_PASSWORD_PLACEHOLDER_TEXT,
+	INPUT_PASSWORD_TYPE,
+} from 'src/util/CommonConstant';
 
 import './Registration.css';
+
+const REGISTRATION_TITLE = 'Registration';
+const REGISTRATION_BUTTON_TEXT = 'SIGN UP';
+const MARK_TEXT = 'If you have any account you may ';
 
 export const Registration: React.FC = () => {
 	const [name, setName] = useState('');
@@ -47,50 +65,47 @@ export const Registration: React.FC = () => {
 		<div>
 			<div className='registration'>
 				<div className='registrationTitle'>
-					<h1>Registration</h1>
+					<h1>{REGISTRATION_TITLE}</h1>
 				</div>
 				<form className='registrationForm' onSubmit={signUp}>
 					<div className='name'>
 						<Input
-							type={'text'}
-							name={'name'}
-							id={'nameId'}
+							type={INPUT_NAME_TYPE}
+							name={INPUT_NAME_NAME}
 							value={name}
 							required={true}
-							labelText='Name'
-							placeholderText={'Input name'}
+							labelText={INPUT_NAME_LABEL_TEXT}
+							placeholderText={INPUT_NAME_PLACEHOLDER_TEXT}
 							onChange={nameOnChange}
 						/>
 					</div>
 					<div className='email'>
 						<Input
-							type={'email'}
-							name={'email'}
-							id={'emailId'}
+							type={INPUT_EMAIL_TYPE}
+							name={INPUT_EMAIL_NAME}
 							value={email}
 							required={true}
-							labelText={'Email'}
-							placeholderText={'Input email'}
+							labelText={INPUT_EMAIL_LABEL_TEXT}
+							placeholderText={INPUT_EMAIL_PLACEHOLDER_TEXT}
 							onChange={emailOnChange}
 						/>
 					</div>
 					<div className='password'>
 						<Input
-							type={'password'}
-							name={'password'}
-							id={'passwordId'}
+							type={INPUT_PASSWORD_TYPE}
+							name={INPUT_PASSWORD_NAME}
 							value={password}
 							required={true}
-							labelText={'Password'}
-							placeholderText={'Input password'}
+							labelText={INPUT_PASSWORD_LABEL_TEXT}
+							placeholderText={INPUT_PASSWORD_PLACEHOLDER_TEXT}
 							onChange={passwordOnChange}
 						/>
 					</div>
 					<div className='signUpButton'>
-						<Button text='SIGN UP' onClick={() => ''} id={'signUpButtonId'} />
+						<Button text={REGISTRATION_BUTTON_TEXT} />
 					</div>
 					<div className='mark'>
-						If you have any account you may{' '}
+						{MARK_TEXT}
 						<Link to={RouterPath.LOGIN} relative='path'>
 							Login
 						</Link>

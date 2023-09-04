@@ -3,38 +3,30 @@ import { Button } from 'src/common/Button';
 
 import './AuthorItem.css';
 
+const REMOVE_BUTTON_TEXT = '-';
+const ADD_BUTTON_TEXT = '+';
+
 export const AuthorItem: React.FC<AuthorItemProp> = (prop) => {
 	if (prop.isCourseAuthor) {
 		return (
-			<div className='courseAuthorItem' key={prop.author.id}>
+			<div className='courseAuthorItem'>
 				<text>{prop.author.name}</text>
 
 				<div className='removeAuthorButton'>
-					<Button
-						text='-'
-						onClick={prop.onClickRemove}
-						id={'removeAuthorButtonId'}
-					/>
+					<Button text={REMOVE_BUTTON_TEXT} onClick={prop.onClickRemove} />
 				</div>
 			</div>
 		);
 	}
+
 	return (
-		<div className='courseAuthorItem' key={prop.author.id}>
+		<div className='courseAuthorItem'>
 			<text>{prop.author.name}</text>
 			<div className='addAuthorButton'>
-				<Button
-					text='&#43;'
-					onClick={prop.onClickAdd}
-					id={'addAuthorButtonId'}
-				/>
+				<Button text={ADD_BUTTON_TEXT} onClick={prop.onClickAdd} />
 			</div>
 			<div className='removeAuthorButton'>
-				<Button
-					text='-'
-					onClick={prop.onClickRemove}
-					id={'removeAuthorButtonId'}
-				/>
+				<Button text={REMOVE_BUTTON_TEXT} onClick={prop.onClickRemove} />
 			</div>
 		</div>
 	);

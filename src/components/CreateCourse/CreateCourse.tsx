@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Button } from 'src/common/Button';
 import { Input } from 'src/common/Input';
 import { Author } from '../Courses/components/CourseCard/Author.types';
 import { AuthorItem } from './components/AuthorItem';
-import { mockedAuthorsList, mockedCoursesList } from 'src/constants';
 import { Course } from 'src/course.type';
 import {
 	isAuthorNameValid,
@@ -18,10 +18,14 @@ import {
 } from 'src/util/validator/CourseValidator';
 import { getCourseDuration } from 'src/util/CourseUtil';
 import { RouterPath } from 'src/util/RouterPath';
-import { checkLogIn } from 'src/util/LoginUtil';
+import { TOKEN_KEY_NAME } from 'src/util/CommonConstant';
+import { AddCourseAction } from 'src/store/course/action';
+import { RootState } from 'src/store';
+import { AddAuthorAction } from 'src/store/author/action';
 
 import './AddCourse.css';
 
+const PAGE_TITLE = 'Course Edit/Create Page';
 const titleErrorLabelMessage = 'length should be at least 2 characters';
 const descriptionErrorLabelMessage =
 	'text length should be at least 2 characters';
@@ -30,10 +34,43 @@ const authorNameErrorLabelMessage = 'length should be at least 2 characters';
 const courseAuthorListErrorLabelMessage = 'Add authors to this list';
 const AUTHOR_LIST_IS_EMPTY_MESSAGE = 'Author list is Empty';
 
-export const CreateCourse: React.FC = () => {
-	checkLogIn();
+const COURSE_FORM_TITLE = 'Main Info';
 
+const TITLE_NAME_VALUE = 'title';
+const TITLE_LABEL_TEXT = 'Title*';
+const INPUT_TITLE_PLACEHOLDER_TEXT = 'Input title';
+
+const DESCRIPTION_NAME_VALUE = 'description';
+const DESCRIPTION_LABEL_TEXT = 'Description*';
+const INPUT_DESCRIPTION_PLACEHOLDER_TEXT = 'Input description';
+
+const DURATION_PART_TITLE = 'Duration';
+const DURATION_NAME_VALUE = 'duration';
+const DURATION_LABEL_TEXT = 'Duration*';
+const INPUT_DURATION_PLACEHOLDER_TEXT = 'Input duration';
+
+const AUTHORS_PART_TITLE = 'Authors';
+const AUTHOR_NAME_VALUE = 'authorName';
+const AUTHORS_LABEL_TEXT = 'Author Name';
+const INPUT_AUTHORS_PLACEHOLDER_TEXT = 'Input author name';
+
+const CREATE_AUTHOR_BUTTON_TEXT = 'CREATE AUTHOR';
+
+const COURSE_AUTHOR_LIST_TITLE = 'Course Authors*';
+
+const CANCEL_BUTTON_TEXT = 'CANCEL';
+const ADD_COURSE_BUTTON_TEXT = 'ADD COURSE';
+
+export const CreateCourse: React.FC = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	if (
+		localStorage.getItem(TOKEN_KEY_NAME) === '' ||
+		localStorage.getItem(TOKEN_KEY_NAME) === null
+	) {
+		navigate(RouterPath.LOGIN);
+	}
 	const [title, setTitle] = useState('');
 	const [titleErrorLabelValue, setTitleErrorLabelValue] = useState('');
 	const [description, setDescription] = useState('');
@@ -45,10 +82,18 @@ export const CreateCourse: React.FC = () => {
 	const [authorName, setAuthorName] = useState('');
 	const [authorNameErrorLabelValue, setAuthorNameErrorLabelValue] =
 		useState('');
-	const [authorList, setAuthorList] = useState(mockedAuthorsList);
+	const [authorList, setAuthorList] = useState([]);
 	const [courseAuthorList, setCourseAuthorList] = useState([]);
 	const [courseAuthorListErrorLabelValue, setCourseAuthorListErrorLabelValue] =
 		useState('');
+
+	const authors = useSelector(
+		(state: RootState) => state.authorReducer.authors
+	);
+
+	useEffect(() => {
+		setAuthorList(authors);
+	}, authors);
 
 	const titleOnChange = (event) => {
 		const newTitle = event.target.value;
@@ -100,6 +145,7 @@ export const CreateCourse: React.FC = () => {
 				name: authorName,
 			};
 			newArray.push(newAuthor);
+
 			setAuthorList(newArray);
 			setAuthorName('');
 		} else {
@@ -158,16 +204,23 @@ export const CreateCourse: React.FC = () => {
 			duration: Number(duration),
 			authors: courseAuthorList.map((courseAuthor: Author) => courseAuthor.id),
 		};
+
 		if (isNewCourseValid(newCourse)) {
+			const newAuthorList = [];
 			courseAuthorList
-				.filter((courseAuthor) => !authorList.includes(courseAuthor))
+				.filter((courseAuthor) => !authors.includes(courseAuthor))
 				.forEach((author) => {
-					authorList.push(author);
+					newAuthorList.push(author);
 				});
+
 			authorList
-				.filter((author) => !mockedAuthorsList.includes(author))
-				.forEach((newAuthor) => mockedAuthorsList.push(newAuthor));
-			mockedCoursesList.push(newCourse);
+				.filter((author) => !authors.includes(author))
+				.forEach((author) => newAuthorList.push(author));
+
+			newAuthorList.forEach((author) => dispatch(AddAuthorAction(author)));
+
+			dispatch(AddCourseAction(newCourse));
+
 			navigate(RouterPath.GET_COURSES);
 		} else {
 			if (!isCourseTitleValid(newCourse.title)) {
@@ -189,22 +242,21 @@ export const CreateCourse: React.FC = () => {
 		<div>
 			<div className='addCourse'>
 				<div className='addCourseTitle'>
-					<h1>Course Edit/Create Page</h1>
+					<h1>{PAGE_TITLE}</h1>
 				</div>
 				<div className='addCourseForm'>
 					<form>
 						<div className='addCourseFormTitle'>
-							<h3>Main Info</h3>
+							<h3>{COURSE_FORM_TITLE}</h3>
 						</div>
 						<div className='courseTitle'>
 							<Input
 								type={'text'}
-								name={'title'}
-								id={'titleId'}
+								name={TITLE_NAME_VALUE}
 								value={title}
 								required={true}
-								labelText='Title*'
-								placeholderText={'Input title'}
+								labelText={TITLE_LABEL_TEXT}
+								placeholderText={INPUT_TITLE_PLACEHOLDER_TEXT}
 								onChange={titleOnChange}
 							/>
 							<label className='errorLabel'>{titleErrorLabelValue}</label>
@@ -212,28 +264,26 @@ export const CreateCourse: React.FC = () => {
 						<div className='courseDescription'>
 							<Input
 								type={'textArea'}
-								name={'description'}
-								id={'descriptionId'}
+								name={DESCRIPTION_NAME_VALUE}
 								value={description}
 								required={true}
-								labelText={'Description*'}
-								placeholderText={'Input description'}
+								labelText={DESCRIPTION_LABEL_TEXT}
+								placeholderText={INPUT_DESCRIPTION_PLACEHOLDER_TEXT}
 								onChange={descriptionOnChange}
 							/>
 							<label className='errorLabel'>{descriptionErrorLabelValue}</label>
 						</div>
 						<div className='durationTitle'>
-							<h3>Duration</h3>
+							<h3>{DURATION_PART_TITLE}</h3>
 						</div>
 						<div className='duration'>
 							<Input
 								type={'number'}
-								name={'duration'}
-								id={'durationId'}
+								name={DURATION_NAME_VALUE}
 								value={duration}
 								required={true}
-								labelText={'Duration*'}
-								placeholderText={'Input duration'}
+								labelText={DURATION_LABEL_TEXT}
+								placeholderText={INPUT_DURATION_PLACEHOLDER_TEXT}
 								onChange={durationOnChange}
 							/>
 							<div className='durationTimeFormat'>
@@ -245,24 +295,22 @@ export const CreateCourse: React.FC = () => {
 					<div className='authorsModule'>
 						<div className='author'>
 							<div className='authorTitle'>
-								<h3>Authors</h3>
+								<h3>{AUTHORS_PART_TITLE}</h3>
 							</div>
 							<div className='inputWithButton'>
 								<Input
 									type={'text'}
-									name={'authorName'}
-									id={'authorId'}
+									name={AUTHOR_NAME_VALUE}
 									value={authorName}
 									required={true}
-									labelText={'Author Name'}
-									placeholderText={'Input author name'}
+									labelText={AUTHORS_LABEL_TEXT}
+									placeholderText={INPUT_AUTHORS_PLACEHOLDER_TEXT}
 									onChange={authorNameOnChange}
 								/>
 								<div className='createCourseButton'>
 									<Button
-										text='CREATE AUTHOR'
+										text={CREATE_AUTHOR_BUTTON_TEXT}
 										onClick={createAuthor}
-										id={'addAuthorButtonId'}
 									/>
 								</div>
 							</div>
@@ -287,7 +335,7 @@ export const CreateCourse: React.FC = () => {
 						</div>
 						<div className='courseAuthorForm'>
 							<div className='courseAuthorTitle'>
-								<h3>Course Authors*</h3>
+								<h3>{COURSE_AUTHOR_LIST_TITLE}</h3>
 							</div>
 							<div className='courseAuthorList'>
 								{courseAuthorList.length > 0
@@ -310,16 +358,14 @@ export const CreateCourse: React.FC = () => {
 				<div className='mainButtons'>
 					<div className='button'>
 						<Button
-							text='CANCEL'
+							text={CANCEL_BUTTON_TEXT}
 							onClick={() => navigate(RouterPath.GET_COURSES)}
-							id={'cancelButtonId'}
 						/>
 					</div>
 					<div className='button'>
 						<Button
-							text='CREATE COURSE'
+							text={ADD_COURSE_BUTTON_TEXT}
 							onClick={() => createCourse()}
-							id={'createCourseButtonId'}
 						/>
 					</div>
 				</div>

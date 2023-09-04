@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { getCourseInfoBy } from 'src/service/APIservice';
-import { CourseCardData } from '../Courses/components/CourseCard';
 import { Button } from 'src/common/Button';
 import {
 	formatCreationDate,
@@ -10,21 +9,39 @@ import {
 	getCourseDuration,
 } from 'src/util/CourseUtil';
 import { RouterPath } from 'src/util/RouterPath';
+import {
+	AUTHORS_TITLE_VALUE,
+	BACK_BUTTON_TEXT_VALUE,
+	CREATED_DATE_TITLE_VALUE,
+	DESCRIPTION_TITLE_VALUE,
+	DURATION_TITLE_VALUE,
+	ID_TITLE_VALUE,
+	TOKEN_KEY_NAME,
+} from 'src/util/CommonConstant';
 
 import './CourseInfo.css';
 
 export const CourseInfo: React.FC = () => {
 	const navigate = useNavigate();
+
+	if (
+		localStorage.getItem(TOKEN_KEY_NAME) === '' ||
+		localStorage.getItem(TOKEN_KEY_NAME) === null
+	) {
+		navigate(RouterPath.LOGIN);
+	}
+
 	const { courseId } = useParams();
-	const courseCardData: CourseCardData = getCourseInfoBy(courseId);
+	const courseCardData = getCourseInfoBy(courseId);
+
 	return (
-		<div id='courseInfoComponent' className='courseInfo'>
-			<div id='courseInfoTitleId'>
+		<div className='courseInfo'>
+			<div>
 				<h1>{courseCardData.title}</h1>
 			</div>
 			<div className='courseMain'>
 				<div className='courseInfoDescription'>
-					<b>Description</b>
+					<b>{DESCRIPTION_TITLE_VALUE}</b>
 					<br />
 					<br />
 					<text>{courseCardData.description}</text>
@@ -34,34 +51,33 @@ export const CourseInfo: React.FC = () => {
 					<br />
 					<br />
 					<text className='courseId'>
-						<b>ID: </b>
+						<b>{ID_TITLE_VALUE}</b>
 						{courseCardData.id}
 					</text>
 					<br />
 					<br />
-					<text id='courseInfoDurationId'>
-						<b>Duration:</b>
+					<text>
+						<b>{DURATION_TITLE_VALUE}</b>
 						{getCourseDuration(courseCardData.duration)}
 					</text>
 					<br />
 					<br />
 					<text className='courseInfoAuthors'>
-						<b>Authors:</b>
-						{getAuthorNames(courseCardData)}
+						<b>{AUTHORS_TITLE_VALUE}</b>
+						{getAuthorNames(courseCardData.authors)}
 					</text>
 					<br />
 					<br />
-					<text id='courseInfoCreationDate'>
-						<b>Created:</b>
+					<text>
+						<b>{CREATED_DATE_TITLE_VALUE}</b>
 						{formatCreationDate(courseCardData.creationDate)}
 					</text>
 				</div>
 			</div>
 			<div className='backButton'>
 				<Button
-					text='Back'
+					text={BACK_BUTTON_TEXT_VALUE}
 					onClick={() => navigate(RouterPath.GET_COURSES)}
-					id={'backButtonId'}
 				/>
 			</div>
 		</div>
