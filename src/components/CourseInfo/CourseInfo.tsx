@@ -9,17 +9,15 @@ import { useAppSelector } from 'src/store/hook';
 import { selectCourseById } from 'src/store/selector/CourseSelector';
 
 import './CourseInfo.css';
+import { selectAllAuthors } from 'src/store/selector/AuthorSelector';
 
 export const CourseInfo: React.FC = () => {
 	const navigate = useNavigate();
 
-	const authors = useAppSelector((state) => state.authorReducer.authors);
+	const authors = useAppSelector(selectAllAuthors);
 
 	const { courseId } = useParams();
-	const course = selectCourseById(
-		useAppSelector((state) => state),
-		courseId
-	);
+	const course = useAppSelector((state) => selectCourseById(state, courseId));
 
 	const courseCardData = CourseUtil.buildCourseCardData(course);
 

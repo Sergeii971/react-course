@@ -2,10 +2,15 @@ import React from 'react';
 
 import { ButtonProps } from './Button.types';
 
-export const Button: React.FC<ButtonProps> = (props) => (
+export const Button: React.FC<ButtonProps> = ({
+	id,
+	text,
+	onClick,
+	testId,
+}) => (
 	<div>
-		<button id={props.id} onClick={props.onClick}>
-			{props.text}
+		<button id={id} onClick={onClick} data-testId={testId}>
+			{text}
 		</button>
 	</div>
 );

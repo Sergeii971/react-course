@@ -10,20 +10,17 @@ export const authorSlice = createSlice({
 	name: 'authorReducer',
 	initialState: INITIAL_STATE,
 	reducers: {
-		FILL_AUTHOR_LIST: (state, action: PayloadAction<Author[]>) => {
+		fillAuthorList: (state, action: PayloadAction<Author[]>) => {
 			state.authors = action.payload;
 		},
-		ADD_AUTHOR: (state, action: PayloadAction<Author>) => {
-			state.authors = state.authors.map((author) => author);
+		addAuthor: (state, action: PayloadAction<Author>) => {
 			state.authors.push(action.payload);
 		},
-		ADD_AUTHORS: (state, action: PayloadAction<Author[]>) => {
-			state.authors = state.authors.map((author) => author);
+		addAuthors: (state, action: PayloadAction<Author[]>) => {
 			action.payload.forEach((author) => state.authors.push(author));
 		},
 	},
 });
 
-export const { FILL_AUTHOR_LIST, ADD_AUTHOR, ADD_AUTHORS } =
-	authorSlice.actions;
+export const { fillAuthorList, addAuthor, addAuthors } = authorSlice.actions;
 export default authorSlice.reducer;

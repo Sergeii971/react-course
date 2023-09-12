@@ -5,7 +5,7 @@ import { Button } from 'src/common/Button';
 import { Input } from 'src/common/Input';
 import { Author } from '../Courses/components/CourseCard/Author.types';
 import { AuthorItem } from './components/AuthorItem';
-import { CourseValdator } from 'src/util/validator/CourseValidator';
+import { CourseValidator } from 'src/util/validator/CourseValidator';
 import { CourseUtil } from 'src/util/CourseUtil';
 import { RouterPath } from 'src/util/RouterPath';
 import { CommonConstant } from 'src/util/CommonConstant';
@@ -19,12 +19,13 @@ import { selectAllCourses } from 'src/store/selector/CourseSelector';
 
 import './CourseForm.css';
 
-const titleErrorLabelMessage = 'length should be at least 2 characters';
-const descriptionErrorLabelMessage =
+const TITLE_ERROR_LABEL_MESSAGE = 'length should be at least 2 characters';
+const DESCRIPTION_ERROR_LABEL_MESSAGE =
 	'text length should be at least 2 characters';
-const durationErrorLabelMessage = 'duration should be more than 0';
-const authorNameErrorLabelMessage = 'length should be at least 2 characters';
-const courseAuthorListErrorLabelMessage = 'Add authors to this list';
+const DURATION_ERROR_LABEL_MESSAGE = 'duration should be more than 0';
+const AUTHOR_NAME_ERROR_LABEL_MESSAGE =
+	'length should be at least 2 characters';
+const COURSE_AUTHOR_LIST_ERROR_LABEL_MESSAGE = 'Add authors to this list';
 const AUTHOR_LIST_IS_EMPTY_MESSAGE = 'Author list is Empty';
 
 export const CourseForm: React.FC = () => {
@@ -81,7 +82,9 @@ export const CourseForm: React.FC = () => {
 	const titleOnChange = (event) => {
 		const newTitle = event.target.value;
 		setTitleErrorLabelValue(
-			CourseValdator.isCourseTitleValid(newTitle) ? '' : titleErrorLabelMessage
+			CourseValidator.isCourseTitleValid(newTitle)
+				? ''
+				: TITLE_ERROR_LABEL_MESSAGE
 		);
 
 		setTitle(newTitle);
@@ -90,22 +93,22 @@ export const CourseForm: React.FC = () => {
 	const descriptionOnChange = (event) => {
 		const newDescription = event.target.value;
 		setDescriptionErrorLabelValue(
-			CourseValdator.isCourseDescriptionValid(newDescription)
+			CourseValidator.isCourseDescriptionValid(newDescription)
 				? ''
-				: descriptionErrorLabelMessage
+				: DESCRIPTION_ERROR_LABEL_MESSAGE
 		);
 		setDescription(newDescription);
 	};
 
 	const durationOnChange = (event) => {
 		const newDuration: number = event.target.value;
-		if (CourseValdator.isCourseDurationValid(newDuration)) {
+		if (CourseValidator.isCourseDurationValid(newDuration)) {
 			setTitleErrorLabelValue('');
 			const time: string = CourseUtil.getCourseDuration(newDuration);
 			setTime(time);
 			setDurationErrorLabelValue('');
 		} else {
-			setDurationErrorLabelValue(durationErrorLabelMessage);
+			setDurationErrorLabelValue(DURATION_ERROR_LABEL_MESSAGE);
 		}
 		setDuration(String(newDuration));
 	};
@@ -113,22 +116,22 @@ export const CourseForm: React.FC = () => {
 	const authorNameOnChange = (event) => {
 		const newAuthorName = event.target.value;
 		setAuthorNameErrorLabelValue(
-			CourseValdator.isAuthorNameValid(newAuthorName)
+			CourseValidator.isAuthorNameValid(newAuthorName)
 				? ''
-				: authorNameErrorLabelMessage
+				: AUTHOR_NAME_ERROR_LABEL_MESSAGE
 		);
 		setAuthorName(newAuthorName);
 	};
 
 	const createAuthor = () => {
-		if (CourseValdator.isAuthorNameValid(authorName)) {
+		if (CourseValidator.isAuthorNameValid(authorName)) {
 			const newAuthor: NewAuthorDto = {
 				name: authorName,
 			};
 			dispatch(createNewAuthor(newAuthor));
 			setAuthorName('');
 		} else {
-			setAuthorNameErrorLabelValue(authorNameErrorLabelMessage);
+			setAuthorNameErrorLabelValue(AUTHOR_NAME_ERROR_LABEL_MESSAGE);
 		}
 	};
 
@@ -146,9 +149,9 @@ export const CourseForm: React.FC = () => {
 		setAuthorList(newAuthorArray);
 		setCourseAuthorList(newCourseAuthorArray);
 		setCourseAuthorListErrorLabelValue(
-			CourseValdator.isCourseAuthorListValid(newCourseAuthorArray)
+			CourseValidator.isCourseAuthorListValid(newCourseAuthorArray)
 				? ''
-				: courseAuthorListErrorLabelMessage
+				: COURSE_AUTHOR_LIST_ERROR_LABEL_MESSAGE
 		);
 	};
 
@@ -182,7 +185,7 @@ export const CourseForm: React.FC = () => {
 			authors: courseAuthorList.map((courseAuthor: Author) => courseAuthor.id),
 		};
 
-		if (CourseValdator.isNewCourseValid(newCourse)) {
+		if (CourseValidator.isNewCourseValid(newCourse)) {
 			dispatch(createNewCourse(newCourse));
 			navigate(RouterPath.GET_COURSES);
 		} else {
@@ -198,7 +201,7 @@ export const CourseForm: React.FC = () => {
 			authors: courseAuthorList.map((courseAuthor: Author) => courseAuthor.id),
 		};
 
-		if (CourseValdator.isNewCourseValid(newCourse)) {
+		if (CourseValidator.isNewCourseValid(newCourse)) {
 			dispatch(updateCourse(newCourse, courseId));
 			navigate(RouterPath.GET_COURSES);
 		} else {
@@ -207,22 +210,27 @@ export const CourseForm: React.FC = () => {
 	};
 
 	const setCourseFormInputerrorLabels = (newCourse: NewCourseDto) => {
-		if (!CourseValdator.isCourseTitleValid(newCourse.title)) {
-			setTitleErrorLabelValue(titleErrorLabelMessage);
+		if (!CourseValidator.isCourseTitleValid(newCourse.title)) {
+			setTitleErrorLabelValue(TITLE_ERROR_LABEL_MESSAGE);
 		}
-		if (!CourseValdator.isCourseDescriptionValid(newCourse.description)) {
-			setDescriptionErrorLabelValue(descriptionErrorLabelMessage);
+
+		if (!CourseValidator.isCourseDescriptionValid(newCourse.description)) {
+			setDescriptionErrorLabelValue(DESCRIPTION_ERROR_LABEL_MESSAGE);
 		}
-		if (!CourseValdator.isCourseDurationValid(newCourse.duration)) {
-			setDurationErrorLabelValue(durationErrorLabelMessage);
+
+		if (!CourseValidator.isCourseDurationValid(newCourse.duration)) {
+			setDurationErrorLabelValue(DURATION_ERROR_LABEL_MESSAGE);
 		}
-		if (!CourseValdator.isCourseAuthorListValid(courseAuthorList)) {
-			setCourseAuthorListErrorLabelValue(courseAuthorListErrorLabelMessage);
+
+		if (!CourseValidator.isCourseAuthorListValid(courseAuthorList)) {
+			setCourseAuthorListErrorLabelValue(
+				COURSE_AUTHOR_LIST_ERROR_LABEL_MESSAGE
+			);
 		}
 	};
 
 	return (
-		<div>
+		<div data-testId={'courseFormTestId'}>
 			<div className='addCourse'>
 				<div className='addCourseTitle'>
 					<h1>{CommonConstant.PAGE_TITLE}</h1>

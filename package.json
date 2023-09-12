@@ -22,7 +22,7 @@
         "eslint:fix": "eslint --fix --ext .ts --ext .tsx src",
         "test:nowatch": "react-scripts test --watchAll=false",
         "prepare": "husky install",
-        "prepublish": "npm run eslint:fix"
+        "prepublish": "npm run eslint:fix && npm run test:nowatch"
     },
     "eslintConfig": {
         "extends": [
@@ -60,6 +60,7 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "file-loader": "^6.2.0",
         "husky": "^8.0.3",
+        "jest": "^27.5.1",
         "prettier": "^3.0.1",
         "typescript": "^3.2.1"
     }
