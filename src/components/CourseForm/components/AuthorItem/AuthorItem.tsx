@@ -6,14 +6,19 @@ import './AuthorItem.css';
 const REMOVE_BUTTON_TEXT = '-';
 const ADD_BUTTON_TEXT = '+';
 
-export const AuthorItem: React.FC<AuthorItemProp> = (prop) => {
-	if (prop.isCourseAuthor) {
+export const AuthorItem: React.FC<AuthorItemProp> = ({
+	author,
+	onClickRemove,
+	onClickAdd,
+	isCourseAuthor,
+}) => {
+	if (isCourseAuthor) {
 		return (
 			<div className='courseAuthorItem'>
-				<text>{prop.author.name}</text>
+				<text>{author.name}</text>
 
 				<div className='removeAuthorButton'>
-					<Button text={REMOVE_BUTTON_TEXT} onClick={prop.onClickRemove} />
+					<Button text={REMOVE_BUTTON_TEXT} onClick={onClickRemove} />
 				</div>
 			</div>
 		);
@@ -21,12 +26,12 @@ export const AuthorItem: React.FC<AuthorItemProp> = (prop) => {
 
 	return (
 		<div className='courseAuthorItem'>
-			<text>{prop.author.name}</text>
+			<text>{author.name}</text>
 			<div className='addAuthorButton'>
-				<Button text={ADD_BUTTON_TEXT} onClick={prop.onClickAdd} />
+				<Button text={ADD_BUTTON_TEXT} onClick={onClickAdd} />
 			</div>
 			<div className='removeAuthorButton'>
-				<Button text={REMOVE_BUTTON_TEXT} onClick={prop.onClickRemove} />
+				<Button text={REMOVE_BUTTON_TEXT} onClick={onClickRemove} />
 			</div>
 		</div>
 	);

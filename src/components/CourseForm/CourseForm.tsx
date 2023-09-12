@@ -1,31 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import { Button } from 'src/common/Button';
 import { Input } from 'src/common/Input';
 import { Author } from '../Courses/components/CourseCard/Author.types';
 import { AuthorItem } from './components/AuthorItem';
-import { Course } from 'src/course.type';
-import {
-	isAuthorNameValid,
-	isCourseAuthorListValid,
-	isCourseDescriptionValid,
-	isCourseDurationValid,
-	isCourseTitleValid,
-	isNewCourseValid,
-} from 'src/util/validator/CourseValidator';
-import { getCourseDuration } from 'src/util/CourseUtil';
+import { CourseValdator } from 'src/util/validator/CourseValidator';
+import { CourseUtil } from 'src/util/CourseUtil';
 import { RouterPath } from 'src/util/RouterPath';
-import { TOKEN_KEY_NAME } from 'src/util/CommonConstant';
-import { AddCourseAction } from 'src/store/course/action';
-import { RootState } from 'src/store';
-import { AddAuthorAction } from 'src/store/author/action';
+import { CommonConstant } from 'src/util/CommonConstant';
+import { useAppDispatch, useAppSelector } from 'src/store/hook';
+import { selectAllAuthors } from 'src/store/selector/AuthorSelector';
+import { NewCourseDto } from 'src/service/dto/NewCourseDto';
+import { createNewCourse, updateCourse } from 'src/store/course/thunk';
+import { NewAuthorDto } from 'src/service/dto/NewAuthorDto';
+import { createNewAuthor, getAllAuthors } from 'src/store/author/thunk';
+import { selectAllCourses } from 'src/store/selector/CourseSelector';
 
-import './AddCourse.css';
+import './CourseForm.css';
 
-const PAGE_TITLE = 'Course Edit/Create Page';
 const titleErrorLabelMessage = 'length should be at least 2 characters';
 const descriptionErrorLabelMessage =
 	'text length should be at least 2 characters';
@@ -34,43 +27,17 @@ const authorNameErrorLabelMessage = 'length should be at least 2 characters';
 const courseAuthorListErrorLabelMessage = 'Add authors to this list';
 const AUTHOR_LIST_IS_EMPTY_MESSAGE = 'Author list is Empty';
 
-const COURSE_FORM_TITLE = 'Main Info';
-
-const TITLE_NAME_VALUE = 'title';
-const TITLE_LABEL_TEXT = 'Title*';
-const INPUT_TITLE_PLACEHOLDER_TEXT = 'Input title';
-
-const DESCRIPTION_NAME_VALUE = 'description';
-const DESCRIPTION_LABEL_TEXT = 'Description*';
-const INPUT_DESCRIPTION_PLACEHOLDER_TEXT = 'Input description';
-
-const DURATION_PART_TITLE = 'Duration';
-const DURATION_NAME_VALUE = 'duration';
-const DURATION_LABEL_TEXT = 'Duration*';
-const INPUT_DURATION_PLACEHOLDER_TEXT = 'Input duration';
-
-const AUTHORS_PART_TITLE = 'Authors';
-const AUTHOR_NAME_VALUE = 'authorName';
-const AUTHORS_LABEL_TEXT = 'Author Name';
-const INPUT_AUTHORS_PLACEHOLDER_TEXT = 'Input author name';
-
-const CREATE_AUTHOR_BUTTON_TEXT = 'CREATE AUTHOR';
-
-const COURSE_AUTHOR_LIST_TITLE = 'Course Authors*';
-
-const CANCEL_BUTTON_TEXT = 'CANCEL';
-const ADD_COURSE_BUTTON_TEXT = 'ADD COURSE';
-
-export const CreateCourse: React.FC = () => {
+export const CourseForm: React.FC = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const location = useLocation();
+	const isAddCourseCase = location.pathname === RouterPath.ADD_NEW_COURSE;
+	const { courseId } = useParams();
 
-	if (
-		localStorage.getItem(TOKEN_KEY_NAME) === '' ||
-		localStorage.getItem(TOKEN_KEY_NAME) === null
-	) {
-		navigate(RouterPath.LOGIN);
-	}
+	const courseList = selectAllCourses(useAppSelector((state) => state));
+	const authors = selectAllAuthors(useAppSelector((state) => state));
+
+	const dispatch = useAppDispatch();
+
 	const [title, setTitle] = useState('');
 	const [titleErrorLabelValue, setTitleErrorLabelValue] = useState('');
 	const [description, setDescription] = useState('');
@@ -87,18 +54,34 @@ export const CreateCourse: React.FC = () => {
 	const [courseAuthorListErrorLabelValue, setCourseAuthorListErrorLabelValue] =
 		useState('');
 
-	const authors = useSelector(
-		(state: RootState) => state.authorReducer.authors
-	);
+	useEffect(() => {
+		dispatch(getAllAuthors());
+	}, [dispatch]);
 
 	useEffect(() => {
-		setAuthorList(authors);
-	}, authors);
+		if (isAddCourseCase) {
+			setAuthorList(authors);
+		} else {
+			const course = courseList.find((course) => course.id === courseId);
+			setTitle(course.title);
+			setDescription(course.description);
+			setDuration(String(course.duration));
+			const courseAuthorList = CourseUtil.getAuthorsByIds(
+				course.authors,
+				authors
+			);
+			setCourseAuthorList(courseAuthorList);
+			const authorList = authors.filter(
+				(author) => !course.authors.includes(author.id)
+			);
+			setAuthorList(authorList);
+		}
+	}, [authors, courseId, courseList, isAddCourseCase]);
 
 	const titleOnChange = (event) => {
 		const newTitle = event.target.value;
 		setTitleErrorLabelValue(
-			isCourseTitleValid(newTitle) ? '' : titleErrorLabelMessage
+			CourseValdator.isCourseTitleValid(newTitle) ? '' : titleErrorLabelMessage
 		);
 
 		setTitle(newTitle);
@@ -107,7 +90,7 @@ export const CreateCourse: React.FC = () => {
 	const descriptionOnChange = (event) => {
 		const newDescription = event.target.value;
 		setDescriptionErrorLabelValue(
-			isCourseDescriptionValid(newDescription)
+			CourseValdator.isCourseDescriptionValid(newDescription)
 				? ''
 				: descriptionErrorLabelMessage
 		);
@@ -116,9 +99,9 @@ export const CreateCourse: React.FC = () => {
 
 	const durationOnChange = (event) => {
 		const newDuration: number = event.target.value;
-		if (isCourseDurationValid(newDuration)) {
+		if (CourseValdator.isCourseDurationValid(newDuration)) {
 			setTitleErrorLabelValue('');
-			const time: string = getCourseDuration(newDuration);
+			const time: string = CourseUtil.getCourseDuration(newDuration);
 			setTime(time);
 			setDurationErrorLabelValue('');
 		} else {
@@ -130,23 +113,19 @@ export const CreateCourse: React.FC = () => {
 	const authorNameOnChange = (event) => {
 		const newAuthorName = event.target.value;
 		setAuthorNameErrorLabelValue(
-			isAuthorNameValid(newAuthorName) ? '' : authorNameErrorLabelMessage
+			CourseValdator.isAuthorNameValid(newAuthorName)
+				? ''
+				: authorNameErrorLabelMessage
 		);
 		setAuthorName(newAuthorName);
 	};
 
 	const createAuthor = () => {
-		if (isAuthorNameValid(authorName)) {
-			const newArray = authorList.map((item) => {
-				return item;
-			});
-			const newAuthor: Author = {
-				id: uuidv4(),
+		if (CourseValdator.isAuthorNameValid(authorName)) {
+			const newAuthor: NewAuthorDto = {
 				name: authorName,
 			};
-			newArray.push(newAuthor);
-
-			setAuthorList(newArray);
+			dispatch(createNewAuthor(newAuthor));
 			setAuthorName('');
 		} else {
 			setAuthorNameErrorLabelValue(authorNameErrorLabelMessage);
@@ -167,7 +146,7 @@ export const CreateCourse: React.FC = () => {
 		setAuthorList(newAuthorArray);
 		setCourseAuthorList(newCourseAuthorArray);
 		setCourseAuthorListErrorLabelValue(
-			isCourseAuthorListValid(newCourseAuthorArray)
+			CourseValdator.isCourseAuthorListValid(newCourseAuthorArray)
 				? ''
 				: courseAuthorListErrorLabelMessage
 		);
@@ -196,45 +175,49 @@ export const CreateCourse: React.FC = () => {
 	};
 
 	const createCourse = () => {
-		const newCourse: Course = {
-			id: uuidv4(),
+		const newCourse: NewCourseDto = {
 			title: title,
 			description: description,
-			creationDate: new Date().toUTCString(),
 			duration: Number(duration),
 			authors: courseAuthorList.map((courseAuthor: Author) => courseAuthor.id),
 		};
 
-		if (isNewCourseValid(newCourse)) {
-			const newAuthorList = [];
-			courseAuthorList
-				.filter((courseAuthor) => !authors.includes(courseAuthor))
-				.forEach((author) => {
-					newAuthorList.push(author);
-				});
-
-			authorList
-				.filter((author) => !authors.includes(author))
-				.forEach((author) => newAuthorList.push(author));
-
-			newAuthorList.forEach((author) => dispatch(AddAuthorAction(author)));
-
-			dispatch(AddCourseAction(newCourse));
-
+		if (CourseValdator.isNewCourseValid(newCourse)) {
+			dispatch(createNewCourse(newCourse));
 			navigate(RouterPath.GET_COURSES);
 		} else {
-			if (!isCourseTitleValid(newCourse.title)) {
-				setTitleErrorLabelValue(titleErrorLabelMessage);
-			}
-			if (!isCourseDescriptionValid(newCourse.description)) {
-				setDescriptionErrorLabelValue(descriptionErrorLabelMessage);
-			}
-			if (!isCourseDurationValid(newCourse.duration)) {
-				setDurationErrorLabelValue(durationErrorLabelMessage);
-			}
-			if (!isCourseAuthorListValid(courseAuthorList)) {
-				setCourseAuthorListErrorLabelValue(courseAuthorListErrorLabelMessage);
-			}
+			setCourseFormInputerrorLabels(newCourse);
+		}
+	};
+
+	const editCourse = () => {
+		const newCourse: NewCourseDto = {
+			title: title,
+			description: description,
+			duration: Number(duration),
+			authors: courseAuthorList.map((courseAuthor: Author) => courseAuthor.id),
+		};
+
+		if (CourseValdator.isNewCourseValid(newCourse)) {
+			dispatch(updateCourse(newCourse, courseId));
+			navigate(RouterPath.GET_COURSES);
+		} else {
+			setCourseFormInputerrorLabels(newCourse);
+		}
+	};
+
+	const setCourseFormInputerrorLabels = (newCourse: NewCourseDto) => {
+		if (!CourseValdator.isCourseTitleValid(newCourse.title)) {
+			setTitleErrorLabelValue(titleErrorLabelMessage);
+		}
+		if (!CourseValdator.isCourseDescriptionValid(newCourse.description)) {
+			setDescriptionErrorLabelValue(descriptionErrorLabelMessage);
+		}
+		if (!CourseValdator.isCourseDurationValid(newCourse.duration)) {
+			setDurationErrorLabelValue(durationErrorLabelMessage);
+		}
+		if (!CourseValdator.isCourseAuthorListValid(courseAuthorList)) {
+			setCourseAuthorListErrorLabelValue(courseAuthorListErrorLabelMessage);
 		}
 	};
 
@@ -242,21 +225,21 @@ export const CreateCourse: React.FC = () => {
 		<div>
 			<div className='addCourse'>
 				<div className='addCourseTitle'>
-					<h1>{PAGE_TITLE}</h1>
+					<h1>{CommonConstant.PAGE_TITLE}</h1>
 				</div>
 				<div className='addCourseForm'>
 					<form>
 						<div className='addCourseFormTitle'>
-							<h3>{COURSE_FORM_TITLE}</h3>
+							<h3>{CommonConstant.COURSE_FORM_TITLE}</h3>
 						</div>
 						<div className='courseTitle'>
 							<Input
 								type={'text'}
-								name={TITLE_NAME_VALUE}
+								name={CommonConstant.TITLE_NAME_VALUE}
 								value={title}
 								required={true}
-								labelText={TITLE_LABEL_TEXT}
-								placeholderText={INPUT_TITLE_PLACEHOLDER_TEXT}
+								labelText={CommonConstant.TITLE_LABEL_TEXT}
+								placeholderText={CommonConstant.INPUT_TITLE_PLACEHOLDER_TEXT}
 								onChange={titleOnChange}
 							/>
 							<label className='errorLabel'>{titleErrorLabelValue}</label>
@@ -264,26 +247,28 @@ export const CreateCourse: React.FC = () => {
 						<div className='courseDescription'>
 							<Input
 								type={'textArea'}
-								name={DESCRIPTION_NAME_VALUE}
+								name={CommonConstant.DESCRIPTION_NAME_VALUE}
 								value={description}
 								required={true}
-								labelText={DESCRIPTION_LABEL_TEXT}
-								placeholderText={INPUT_DESCRIPTION_PLACEHOLDER_TEXT}
+								labelText={CommonConstant.DESCRIPTION_LABEL_TEXT}
+								placeholderText={
+									CommonConstant.INPUT_DESCRIPTION_PLACEHOLDER_TEXT
+								}
 								onChange={descriptionOnChange}
 							/>
 							<label className='errorLabel'>{descriptionErrorLabelValue}</label>
 						</div>
 						<div className='durationTitle'>
-							<h3>{DURATION_PART_TITLE}</h3>
+							<h3>{CommonConstant.DURATION_PART_TITLE}</h3>
 						</div>
 						<div className='duration'>
 							<Input
 								type={'number'}
-								name={DURATION_NAME_VALUE}
+								name={CommonConstant.DURATION_NAME_VALUE}
 								value={duration}
 								required={true}
-								labelText={DURATION_LABEL_TEXT}
-								placeholderText={INPUT_DURATION_PLACEHOLDER_TEXT}
+								labelText={CommonConstant.DURATION_LABEL_TEXT}
+								placeholderText={CommonConstant.INPUT_DURATION_PLACEHOLDER_TEXT}
 								onChange={durationOnChange}
 							/>
 							<div className='durationTimeFormat'>
@@ -295,21 +280,23 @@ export const CreateCourse: React.FC = () => {
 					<div className='authorsModule'>
 						<div className='author'>
 							<div className='authorTitle'>
-								<h3>{AUTHORS_PART_TITLE}</h3>
+								<h3>{CommonConstant.AUTHORS_PART_TITLE}</h3>
 							</div>
 							<div className='inputWithButton'>
 								<Input
 									type={'text'}
-									name={AUTHOR_NAME_VALUE}
+									name={CommonConstant.AUTHOR_NAME_VALUE}
 									value={authorName}
 									required={true}
-									labelText={AUTHORS_LABEL_TEXT}
-									placeholderText={INPUT_AUTHORS_PLACEHOLDER_TEXT}
+									labelText={CommonConstant.AUTHORS_LABEL_TEXT}
+									placeholderText={
+										CommonConstant.INPUT_AUTHORS_PLACEHOLDER_TEXT
+									}
 									onChange={authorNameOnChange}
 								/>
 								<div className='createCourseButton'>
 									<Button
-										text={CREATE_AUTHOR_BUTTON_TEXT}
+										text={CommonConstant.CREATE_AUTHOR_BUTTON_TEXT}
 										onClick={createAuthor}
 									/>
 								</div>
@@ -335,7 +322,7 @@ export const CreateCourse: React.FC = () => {
 						</div>
 						<div className='courseAuthorForm'>
 							<div className='courseAuthorTitle'>
-								<h3>{COURSE_AUTHOR_LIST_TITLE}</h3>
+								<h3>{CommonConstant.COURSE_AUTHOR_LIST_TITLE}</h3>
 							</div>
 							<div className='courseAuthorList'>
 								{courseAuthorList.length > 0
@@ -358,14 +345,18 @@ export const CreateCourse: React.FC = () => {
 				<div className='mainButtons'>
 					<div className='button'>
 						<Button
-							text={CANCEL_BUTTON_TEXT}
+							text={CommonConstant.CANCEL_BUTTON_TEXT}
 							onClick={() => navigate(RouterPath.GET_COURSES)}
 						/>
 					</div>
 					<div className='button'>
 						<Button
-							text={ADD_COURSE_BUTTON_TEXT}
-							onClick={() => createCourse()}
+							text={
+								isAddCourseCase
+									? CommonConstant.ADD_COURSE_BUTTON_TEXT
+									: CommonConstant.EDIT_COURSE_BUTTON_TEXT
+							}
+							onClick={() => (isAddCourseCase ? createCourse() : editCourse())}
 						/>
 					</div>
 				</div>

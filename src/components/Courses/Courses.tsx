@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { CourseCard } from './components/CourseCard';
 import { EmptyCourseList } from './components/EmptyCourseList';
 import { Button } from 'src/common/Button';
 import { SearchBar } from './components/SearchBar';
-import {
-	PERMISSION_ERROR_TEXT_MESSAGE,
-	TOKEN_KEY_NAME,
-} from 'src/util/CommonConstant';
-import { buildCourseCardData } from 'src/util/CourseUtil';
+import { CommonConstant } from 'src/util/CommonConstant';
+import { CourseUtil } from 'src/util/CourseUtil';
 import { RouterPath } from 'src/util/RouterPath';
-import { RootState } from 'src/store';
-import { DeleteCourseAction } from 'src/store/course/action';
+import { useAppDispatch, useAppSelector } from 'src/store/hook';
+import { selectAllCourses } from 'src/store/selector/CourseSelector';
+import { getAllAuthors } from 'src/store/author/thunk';
+import { deleteCourse, getAllCourses } from 'src/store/course/thunk';
 
 import './Courses.css';
 
@@ -22,25 +20,21 @@ const SEARCH_NOTHING_FOUND_MESSAGE = 'Nothing Found';
 
 export const Courses: React.FC = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 
-	if (
-		localStorage.getItem(TOKEN_KEY_NAME) === '' ||
-		localStorage.getItem(TOKEN_KEY_NAME) === null
-	) {
-		navigate(RouterPath.LOGIN);
-	}
-
-	const courseList = useSelector(
-		(state: RootState) => state.courseReducer.courses
-	);
+	const courseList = selectAllCourses(useAppSelector((state) => state));
+	const dispatch = useAppDispatch();
 
 	const [searchValue, setSearchValue] = useState('');
 	const [filteredList, setFilteredList] = useState(courseList);
 
 	useEffect(() => {
+		dispatch(getAllAuthors());
+		dispatch(getAllCourses());
+	}, [dispatch]);
+
+	useEffect(() => {
 		setFilteredList(courseList);
-	});
+	}, [courseList]);
 
 	const searchValueOnChange = (event) => {
 		setSearchValue(event.target.value);
@@ -60,25 +54,25 @@ export const Courses: React.FC = () => {
 	};
 
 	const addCourseOnClick = () => {
-		//add role check in module 4
-		if (localStorage.getItem(TOKEN_KEY_NAME) === null) {
-			alert(PERMISSION_ERROR_TEXT_MESSAGE);
-		} else {
-			navigate(RouterPath.ADD_NEW_COURSE);
-		}
+		navigate(RouterPath.ADD_NEW_COURSE);
 	};
 
 	const removeCourseOnClick = (id: string) => {
-		dispatch(DeleteCourseAction(id));
+		dispatch(deleteCourse(id));
 	};
 
 	const editOnCLick = (id: string) => {
-		console.log('');
+		navigate(
+			RouterPath.UPDATE_COURSE.replace(
+				CommonConstant.COURSE_ID_REQUEST_PARAM,
+				id
+			)
+		);
 	};
 
-	if (filteredList.length > 0) {
+	if (filteredList.length) {
 		const courseList = filteredList.map((course) => {
-			const courseCardData = buildCourseCardData(course);
+			const courseCardData = CourseUtil.buildCourseCardData(course);
 			return (
 				<CourseCard
 					course={{ ...courseCardData }}

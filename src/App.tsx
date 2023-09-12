@@ -9,8 +9,10 @@ import { Login } from './components/Login';
 import { RouterPath } from './util/RouterPath';
 
 import { CourseInfo } from './components/CourseInfo';
-import { CreateCourse } from './components/CreateCourse';
 import { store } from './store';
+import { ProtectedRoute } from './components/security/ProtectedRoute';
+import { UserRole } from './util/UserRole';
+import { CourseForm } from './components/CourseForm';
 
 import './App.css';
 
@@ -20,20 +22,47 @@ const App: React.FC = () => {
 			<Provider store={store} stabilityCheck='always'>
 				<Header />
 				<Routes>
-					<Route index element={<Courses />}></Route>
+					<Route index element={<Login />}></Route>
 					<Route
 						path={RouterPath.REGISTRATION}
 						element={<Registration />}
 					></Route>
 					<Route path={RouterPath.LOGIN} element={<Login />}></Route>
-					<Route path={RouterPath.GET_COURSES} element={<Courses />}></Route>
+					<Route
+						path={RouterPath.GET_COURSES}
+						element={
+							<ProtectedRoute
+								component={<Courses />}
+								roles={[UserRole.ADMIN, UserRole.USER]}
+							/>
+						}
+					></Route>
 					<Route
 						path={RouterPath.GET_COURSE_BY_ID}
-						element={<CourseInfo />}
+						element={
+							<ProtectedRoute
+								component={<CourseInfo />}
+								roles={[UserRole.ADMIN, UserRole.USER]}
+							/>
+						}
 					></Route>
 					<Route
 						path={RouterPath.ADD_NEW_COURSE}
-						element={<CreateCourse />}
+						element={
+							<ProtectedRoute
+								component={<CourseForm />}
+								roles={[UserRole.ADMIN]}
+							/>
+						}
+					></Route>
+					<Route
+						path={RouterPath.UPDATE_COURSE}
+						element={
+							<ProtectedRoute
+								component={<CourseForm />}
+								roles={[UserRole.ADMIN]}
+							/>
+						}
 					></Route>
 				</Routes>
 			</Provider>
