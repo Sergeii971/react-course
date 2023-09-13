@@ -2,3 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run prepublish
+
+npm --no-install git-precommit-checks
+./git-hooks/check-stage.js

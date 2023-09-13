@@ -10,6 +10,7 @@ export const getAllAuthors = () => async (dispatch) => {
 export const createNewAuthor =
 	(newAuthor: NewAuthorDto) => async (dispatch) => {
 		const data = await createAuthor(newAuthor);
+
 		if (data.successful) {
 			dispatch(addAuthor(data.result));
 		} else {

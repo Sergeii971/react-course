@@ -63,11 +63,11 @@ export const getCurrentUserAPI = async (token: string) => {
 	}
 };
 
-export const calllogoutAPI = async () => {
+export const callLogoutAPI = async () => {
 	try {
 		const token = localStorage.getItem(CommonConstant.TOKEN_KEY_NAME);
 
-		fetch(ApiUrl.LOGOUT_URL, {
+		await fetch(ApiUrl.LOGOUT_URL, {
 			method: HttpRequestType.HTTP_REQUEST_TYPE_DELETE,
 			headers: {
 				Authorization: token,
@@ -127,12 +127,15 @@ export const createAuthor = async (newAuthor: NewAuthorDto) => {
 export const deleteCourseAPI = async (id: string) => {
 	const token = localStorage.getItem(CommonConstant.TOKEN_KEY_NAME);
 
-	fetch(ApiUrl.DELETE_COURSE_URL.replace(CommonConstant.ID_REQUEST_PARAM, id), {
-		method: HttpRequestType.HTTP_REQUEST_TYPE_DELETE,
-		headers: {
-			Authorization: token,
-		},
-	}).catch((error) => {
+	await fetch(
+		ApiUrl.DELETE_COURSE_URL.replace(CommonConstant.ID_REQUEST_PARAM, id),
+		{
+			method: HttpRequestType.HTTP_REQUEST_TYPE_DELETE,
+			headers: {
+				Authorization: token,
+			},
+		}
+	).catch((error) => {
 		alert(error.message);
 	});
 };

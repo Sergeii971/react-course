@@ -2,7 +2,7 @@ import { LoginUser } from 'src/components/Login/LoginUser.types';
 import { addUser, deleteUserData, updateUserData } from './reducer';
 import {
 	callLoginAPI,
-	calllogoutAPI,
+	callLogoutAPI,
 	getCurrentUserAPI,
 } from 'src/service/APIservice';
 import { CommonConstant } from 'src/util/CommonConstant';
@@ -13,7 +13,7 @@ export const getCurrentUser = (token: string) => async (dispatch) => {
 };
 
 export const logout = () => async (dispatch) => {
-	calllogoutAPI();
+	await callLogoutAPI();
 	dispatch(deleteUserData());
 	localStorage.clear();
 };

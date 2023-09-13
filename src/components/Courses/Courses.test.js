@@ -65,18 +65,22 @@ const courses = (
 	</BrowserRouter>
 );
 
-test('display courses with amount of CourseCard equal length of courses array', () => {
+beforeEach(() => {
 	render(courses);
-	const expected = mockedState.course.courses.length;
-	const actual = mockedState.course.courses.filter((course) =>
-		screen.getByTestId(course.id)
-	).length;
-	expect(actual).toEqual(expected);
 });
 
-test('CourseForm should be shown after a click on the "Add new course" button', () => {
-	render(courses);
-	const button = screen.getByTestId('addCourseButtonTestId');
-	fireEvent.click(button);
-	expect(screen.getByTestId('courseFormTestId')).toBeInTheDocument();
+describe('Component: Courses', () => {
+	test('should display courses with amount of CourseCard equal length of courses array', () => {
+		const expected = mockedState.course.courses.length;
+		const actual = mockedState.course.courses.filter((course) =>
+			screen.getByTestId(course.id)
+		).length;
+		expect(actual).toEqual(expected);
+	});
+
+	test('should CourseForm should be shown after a click on the "Add new course" button', () => {
+		const button = screen.getByTestId('addCourseButtonTestId');
+		fireEvent.click(button);
+		expect(screen.getByTestId('courseFormTestId')).toBeInTheDocument();
+	});
 });

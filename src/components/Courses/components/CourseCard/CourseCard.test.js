@@ -59,42 +59,43 @@ const courseCard = (
 	</BrowserRouter>
 );
 
-test('load and display course title', () => {
+beforeEach(() => {
 	render(courseCard);
-	expect(screen.queryByText('Angular')).toBeInTheDocument();
 });
 
-test('load and display course description', () => {
-	render(courseCard);
-	expect(
-		screen.queryByText(
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
-		)
-	).toBeInTheDocument();
-});
+describe('Component: CourseCard', () => {
+	test('should load and display course title', () => {
+		expect(screen.queryByText('Angular')).toBeInTheDocument();
+	});
 
-test('load and display duration in correct format', () => {
-	render(courseCard);
-	const expected = CourseUtil.getCourseDuration(
-		mockedState.course.courses[0].duration
-	);
-	expect(screen.queryByText(expected)).toBeInTheDocument();
-});
+	test('should and display course description', () => {
+		expect(
+			screen.queryByText(
+				"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+			)
+		).toBeInTheDocument();
+	});
 
-test('load and display author list', () => {
-	render(courseCard);
-	const expected = CourseUtil.getAuthorNames(
-		course.authors,
-		mockedState.author.authors
-	);
+	test('should and display duration in correct format', () => {
+		const expected = CourseUtil.getCourseDuration(
+			mockedState.course.courses[0].duration
+		);
+		expect(screen.queryByText(expected)).toBeInTheDocument();
+	});
 
-	expect(screen.queryByText(expected)).toBeInTheDocument();
-});
+	test('should and display author list', () => {
+		const expected = CourseUtil.getAuthorNames(
+			course.authors,
+			mockedState.author.authors
+		);
 
-test('load and display creation date in correct format', () => {
-	render(courseCard);
-	const expected = CourseUtil.formatCreationDate(
-		mockedState.course.courses[0].creationDate
-	);
-	expect(screen.queryByText(expected)).toBeInTheDocument();
+		expect(screen.queryByText(expected)).toBeInTheDocument();
+	});
+
+	test('should and display creation date in correct format', () => {
+		const expected = CourseUtil.formatCreationDate(
+			mockedState.course.courses[0].creationDate
+		);
+		expect(screen.queryByText(expected)).toBeInTheDocument();
+	});
 });

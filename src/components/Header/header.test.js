@@ -30,17 +30,20 @@ const header = (
 	</BrowserRouter>
 );
 
-test("load and display user's name", () => {
+beforeEach(() => {
 	render(header);
-	expect(screen.queryByText('Test Name')).toBeInTheDocument();
 });
 
-test('load and display login button', () => {
-	render(header);
-	expect(screen.getByTestId('logoutButtonTestId')).toBeInTheDocument();
-});
+describe('Component: Header', () => {
+	test("should load and display user's name", () => {
+		expect(screen.queryByText('Test Name')).toBeInTheDocument();
+	});
 
-test('load and display logo', () => {
-	render(header);
-	expect(screen.getByTestId('logo')).toBeInTheDocument();
+	test('should load and display login button', () => {
+		expect(screen.getByTestId('logoutButtonTestId')).toBeInTheDocument();
+	});
+
+	test('should load and display logo', () => {
+		expect(screen.getByTestId('logo')).toBeInTheDocument();
+	});
 });
