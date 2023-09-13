@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const location = useLocation();
-	const userData = selectUser(useAppSelector((state) => state));
+	const userData = useAppSelector(selectUser);
 	const userName = userData.name;
 
 	const buttonAction = () => {
@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
 		location.pathname === RouterPath.REGISTRATION
 	) {
 		return (
-			<div>
+			<div data-testId='logo'>
 				<header className='header'>
 					<Logo />
 				</header>
@@ -38,12 +38,16 @@ export const Header: React.FC = () => {
 	return (
 		<div>
 			<header className='header'>
-				<Logo />
+				<div data-testId='logo'>
+					<Logo />
+				</div>
 				<div className='userNameWithButton'>
 					<div className='userName'>
 						<b>{userName}</b>
 					</div>
-					<Button text={LOGOUT_BUTTON_TEXT} onClick={buttonAction} />
+					<div data-testId='logoutButtonTestId'>
+						<Button text={LOGOUT_BUTTON_TEXT} onClick={buttonAction} />
+					</div>
 				</div>
 			</header>
 		</div>

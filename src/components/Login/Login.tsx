@@ -8,7 +8,7 @@ import { callLoginAPI } from 'src/service/APIservice';
 import { CommonConstant } from 'src/util/CommonConstant';
 import { RouterPath } from 'src/util/RouterPath';
 import { useAppDispatch } from 'src/store/hook';
-import { LOGIN } from 'src/store/user/reducer';
+import { addUser } from 'src/store/user/reducer';
 
 import './Login.css';
 
@@ -44,9 +44,9 @@ export const Login: React.FC = () => {
 			alert(user.result);
 		} else {
 			localStorage.setItem(CommonConstant.TOKEN_KEY_NAME, user.result);
-			dispatch(LOGIN(user));
+			dispatch(addUser(user));
+			navigate(RouterPath.GET_COURSES);
 		}
-		navigate(RouterPath.GET_COURSES);
 	};
 
 	return (

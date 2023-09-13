@@ -21,7 +21,7 @@ const SEARCH_NOTHING_FOUND_MESSAGE = 'Nothing Found';
 export const Courses: React.FC = () => {
 	const navigate = useNavigate();
 
-	const courseList = selectAllCourses(useAppSelector((state) => state));
+	const courseList = useAppSelector(selectAllCourses);
 	const dispatch = useAppDispatch();
 
 	const [searchValue, setSearchValue] = useState('');
@@ -96,6 +96,7 @@ export const Courses: React.FC = () => {
 						<Button
 							text={ADD_NEW_COURSE_BUTTON_TEXT}
 							onClick={addCourseOnClick}
+							testId={'addCourseButtonTestId'}
 						/>
 					</div>
 				</div>

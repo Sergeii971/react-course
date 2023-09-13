@@ -32,11 +32,11 @@ export const CourseCard: React.FC<CourseCardProp> = ({
 		);
 	};
 
-	const authors = selectAllAuthors(useAppSelector((state) => state));
-	const currentUser = selectUser(useAppSelector((state) => state));
+	const authors = useAppSelector(selectAllAuthors);
+	const currentUser = useAppSelector(selectUser);
 
 	return (
-		<div className='courseCard' key={course.id}>
+		<div className='courseCard' key={course.id} data-testId={course.id}>
 			<div className='title'>
 				<h1>{course.title}</h1>
 			</div>

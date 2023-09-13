@@ -1,38 +1,30 @@
-import { ApiUrl } from 'src/service/util/ApiUrl';
-import { HttpRequestType } from 'src/service/util/HttpRequestType';
-import { LOGOUT, UPDATE_USER_DATA } from './reducer';
+import { LoginUser } from 'src/components/Login/LoginUser.types';
+import { addUser, deleteUserData, updateUserData } from './reducer';
+import {
+	callLoginAPI,
+	callLogoutAPI,
+	getCurrentUserAPI,
+} from 'src/service/APIservice';
 import { CommonConstant } from 'src/util/CommonConstant';
 
-export const getCurrentUser = (token: string) => async (dispatch, getState) => {
-	fetch(ApiUrl.GET_CURRENT_USER_URL, {
-		method: HttpRequestType.HTTP_REQUEST_TYPE_GET,
-		headers: {
-			Authorization: token,
-		},
-	})
-		.then((response) => response.json())
-		.then((data) => {
-			dispatch(UPDATE_USER_DATA(data.result));
-		})
-		.catch((error) => {
-			alert(error.message);
-		});
+export const getCurrentUser = (token: string) => async (dispatch) => {
+	const user = await getCurrentUserAPI(token);
+	dispatch(updateUserData(user));
 };
 
-export const logout = () => async (dispatch, getState) => {
-	const token = localStorage.getItem(CommonConstant.TOKEN_KEY_NAME);
+export const logout = () => async (dispatch) => {
+	await callLogoutAPI();
+	dispatch(deleteUserData());
+	localStorage.clear();
+};
 
-	fetch(ApiUrl.LOGOUT_URL, {
-		method: HttpRequestType.HTTP_REQUEST_TYPE_DELETE,
-		headers: {
-			Authorization: token,
-		},
-	})
-		.then(() => {
-			dispatch(LOGOUT());
-			localStorage.clear();
-		})
-		.catch((error) => {
-			alert(error.message);
-		});
+export const login = (loginUser: LoginUser) => async (dispatch) => {
+	const user = await callLoginAPI(loginUser);
+
+	if (!user.successful) {
+		alert(user.result);
+	} else {
+		localStorage.setItem(CommonConstant.TOKEN_KEY_NAME, user.result);
+		dispatch(addUser(user));
+	}
 };

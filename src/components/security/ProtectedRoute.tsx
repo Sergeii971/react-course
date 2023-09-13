@@ -22,13 +22,18 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
 	const currentUser = selectUser(useAppSelector((state) => state));
 
-	if (!token) {
-		return <Navigate to={RouterPath.LOGIN} replace />;
-	}
-	if (currentUser.role && !roles.includes(currentUser.role)) {
+	const showAlertMessage = () => {
 		if (roles.length === 1 && roles.includes(UserRole.ADMIN)) {
 			alert(CommonConstant.PERMISSION_ERROR_TEXT_MESSAGE);
 		}
+	};
+
+	if (!token) {
+		return <Navigate to={RouterPath.LOGIN} replace />;
+	}
+
+	if (currentUser.role && !roles.includes(currentUser?.role)) {
+		showAlertMessage();
 		return <Navigate to={RouterPath.GET_COURSES} replace />;
 	}
 

@@ -1,7 +1,7 @@
 import { Author } from 'src/components/Courses/components/CourseCard/Author.types';
 import { NewCourseDto } from 'src/service/dto/NewCourseDto';
 
-export class CourseValdator {
+export class CourseValidator {
 	public static isNewCourseValid = (newCourse: NewCourseDto) => {
 		return (
 			this.isCourseTitleValid(newCourse.title) &&

@@ -16,26 +16,22 @@ export const userSlice = createSlice({
 	name: 'authReducer',
 	initialState: INITIAL_STATE,
 	reducers: {
-		LOGIN: (state, action: PayloadAction<UserDto>) => {
+		addUser: (state, action: PayloadAction<UserDto>) => {
 			state.isAuth = true;
 			state.name = action.payload.name;
 			state.email = action.payload.email;
 			state.token = action.payload.result;
 		},
-		UPDATE_USER_DATA: (state, action: PayloadAction<CurrentUserDto>) => {
+		updateUserData: (state, action: PayloadAction<CurrentUserDto>) => {
 			state.name = action.payload.name;
 			state.email = action.payload.email;
 			state.role = action.payload.role;
 		},
-		LOGOUT: (state) => {
-			state.isAuth = false;
-			state.name = '';
-			state.email = '';
-			state.token = '';
-			state.role = '';
+		deleteUserData: (state) => {
+			state = INITIAL_STATE;
 		},
 	},
 });
 
-export const { LOGIN, LOGOUT, UPDATE_USER_DATA } = userSlice.actions;
+export const { addUser, deleteUserData, updateUserData } = userSlice.actions;
 export default userSlice.reducer;
